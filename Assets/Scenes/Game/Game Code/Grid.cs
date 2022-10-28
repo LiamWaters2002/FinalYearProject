@@ -19,7 +19,7 @@ public class Grid
         loop();
     }
 
-    public void loop(Transform visualPrefab)
+    public void loop()
     {
 
         for (int x = 0; x < width; x++)
@@ -28,7 +28,7 @@ public class Grid
             {
                 GridCoords gridCoords = new GridCoords(x, z);
                 gridArray[x, z] = new DisplayGrid(this, gridCoords);
-                GameObject.Instantiate(visualPrefab, GetWorldPosition(x, z), Quaternion.identity);
+                //GameObject.Instantiate(visualPrefab, GetWorldPosition(x, z), Quaternion.identity);
             }
         }
     }
