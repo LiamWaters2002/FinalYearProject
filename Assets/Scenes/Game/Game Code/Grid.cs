@@ -28,7 +28,7 @@ public class Grid
             {
                 GridCoords gridCoords = new GridCoords(x, z);
                 gridArray[x, z] = new DisplayGrid(this, gridCoords);
-                //GameObject.Instantiate(visualPrefab, GetWorldPosition(x, z), Quaternion.identity);
+                Debug.DrawLine(GetWorldPosition(x, z), GetWorldPosition(x, z) + Vector3.right * .9f, Color.red, 1000);
             }
         }
     }
