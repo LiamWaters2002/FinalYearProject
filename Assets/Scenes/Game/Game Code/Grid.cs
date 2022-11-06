@@ -7,7 +7,7 @@ public class Grid
     private int height;
     private int width;
     private float cellSize;
-    private DisplayGrid[,] gridArray;
+    private GridObject[,] gridArray;
 
 
     public Grid(int height, int width, float cellSize)
@@ -15,7 +15,7 @@ public class Grid
         this.height = height;
         this.width = width;
         this.cellSize = cellSize;
-        gridArray = new DisplayGrid[width, height];
+        gridArray = new GridObject[width, height];
         loop();
     }
 
@@ -26,23 +26,38 @@ public class Grid
         {
             for (int z = 0; z < height; z++)
             {
-                GridCoords gridCoords = new GridCoords(x, z);
-                gridArray[x, z] = new DisplayGrid(this, gridCoords);
-                Debug.DrawLine(GetWorldPosition(x, z), GetWorldPosition(x, z) + Vector3.right * .9f, Color.red, 1000);
+                GridPosition gridPosition = new GridPosition(x, z);
+                gridArray[x, z] = new GridObject(this, gridPosition);
+                Debug.DrawLine(GetWorldPosition(gridPosition), GetWorldPosition(gridPosition) + Vector3.right * .9f, Color.red, 1000);
             }
         }
     }
 
-    public Vector3 GetWorldPosition(int x, int z)
+    public Vector3 GetWorldPosition(GridPosition gridPosition)
     {
-        return new Vector3(x, 0, z) * cellSize;
+        return new Vector3(gridPosition.getX(), 0, gridPosition.getZ()) * cellSize;
     }
 
-    public GridCoords GetGridPosition(Vector3 worldPosition)
+    public GridPosition GetGridPosition(Vector3 worldPosition)
     {
-        return new GridCoords(
+        return new GridPosition(
             Mathf.RoundToInt(worldPosition.x / cellSize),
             Mathf.RoundToInt(worldPosition.z / cellSize)
             );
+    }
+
+    public GridObject GetGridObject(GridPosition gridPosition)
+    {
+        return gridArray[gridPosition.getX(), gridPosition.getZ()];
+    }
+
+    public int getWidth()
+    {
+        return width;
+    }
+
+    public int getHeight()
+    {
+        return height;
     }
 }

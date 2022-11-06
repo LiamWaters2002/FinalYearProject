@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridCoords : MonoBehaviour
+public class GridPosition
 {
     private int x;
     private int z;
 
-    public GridCoords(int x, int z)
+    public GridPosition(int x, int z)
     {
         this.x = x;
         this.z = z;

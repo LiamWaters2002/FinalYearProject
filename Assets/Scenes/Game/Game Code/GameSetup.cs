@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class GameSetup : MonoBehaviour
 {
-    private Grid grid;
+    public static Grid grid;
 
 
-    // Start is called before the first frame update
-    private void Start()
+        // Start is called before the first frame update
+        private void Start()
     {
         grid = new Grid(10, 10, 2f);
 
@@ -23,4 +23,5 @@ public class GameSetup : MonoBehaviour
         Debug.Log(grid.GetGridPosition(PressedPosition.getClickPosition()).getX());
         Debug.Log(grid.GetGridPosition(PressedPosition.getClickPosition()).getZ());
     }
+
 }
