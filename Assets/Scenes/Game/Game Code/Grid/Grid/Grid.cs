@@ -7,7 +7,7 @@ public class Grid
     private int height;
     private int width;
     private float cellSize;
-    private GridObject[,] gridArray;
+    private GridObject gridObject;
 
 
     public Grid(int height, int width, float cellSize)
@@ -15,7 +15,7 @@ public class Grid
         this.height = height;
         this.width = width;
         this.cellSize = cellSize;
-        gridArray = new GridObject[width, height];
+        gridObject = new GridObject(this);
         loop();
     }
 
@@ -27,7 +27,7 @@ public class Grid
             for (int z = 0; z < height; z++)
             {
                 GridPosition gridPosition = new GridPosition(x, z);
-                gridArray[x, z] = new GridObject(this, gridPosition);
+                //gridObject.AddObject(this, GridPosition);
                 Debug.DrawLine(GetWorldPosition(gridPosition), GetWorldPosition(gridPosition) + Vector3.right * .9f, Color.red, 1000);
             }
         }
@@ -42,13 +42,12 @@ public class Grid
     {
         return new GridPosition(
             Mathf.RoundToInt(worldPosition.x / cellSize),
-            Mathf.RoundToInt(worldPosition.z / cellSize)
-            );
+            Mathf.RoundToInt(worldPosition.z / cellSize));
     }
 
-    public GridObject GetGridObject(GridPosition gridPosition)
+    public GridObject GetGridObject()
     {
-        return gridArray[gridPosition.getX(), gridPosition.getZ()];
+        return gridObject;
     }
 
     public int getWidth()
