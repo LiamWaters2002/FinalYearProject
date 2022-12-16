@@ -10,8 +10,8 @@ public class WorldGrid : MonoBehaviour
 
     private Grid grid;
     private GridObject gridObject;
-    int gridWidth = 8;
-    int gridHeight = 8;
+    int gridWidth = 20;
+    int gridHeight = 20;
     float cellSize = 2f;
 
     private void Awake()
@@ -32,7 +32,16 @@ public class WorldGrid : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0) && )
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            placeableObject = placeableObjectList[0];
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            placeableObject = placeableObjectList[1];
+        }
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             GridPosition gridPosition = grid.GetGridPosition(PressedPosition.getClickPosition());
 

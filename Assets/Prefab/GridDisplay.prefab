@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5574535343246131283}
   - component: {fileID: 5574535343246131292}
   - component: {fileID: 5574535343246131293}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Plane
   m_TagString: Grid
   m_Icon: {fileID: 0}
@@ -107,7 +107,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5574535345108460725}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: GridDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
