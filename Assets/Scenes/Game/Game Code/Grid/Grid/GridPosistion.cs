@@ -22,4 +22,15 @@ public class GridPosition
     {
         return z;
     }
+
+    public void setX(int x)
+    {
+        this.x = x;
+    }
+
+    public void setZ(int z)
+    {
+        this.z = z;
+    }
+
 }

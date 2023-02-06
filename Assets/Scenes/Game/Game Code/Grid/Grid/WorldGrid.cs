@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class WorldGrid : MonoBehaviour
 {
@@ -43,6 +44,11 @@ public class WorldGrid : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
+
             GridPosition gridPosition = grid.GetGridPosition(PressedPosition.getClickPosition());
 
             int pressedPositionX = gridPosition.getX();
@@ -55,12 +61,12 @@ public class WorldGrid : MonoBehaviour
 
             Vector3 position = new Vector3((pressedPositionX * cellSize), 0.0f, (pressedPositionZ * cellSize));
 
-            if (!ObstructionAtGridPosition(gridPosition))
+            if (!ObstructionAtGridPosition(gridPosition, placeableObject))
             {
                 Object ingameObject = Instantiate(placeableObject.GetPrefab(), position, Quaternion.identity);
-                PlaceableObject placedObject = new PlaceableObject(ingameObject);
-                AddObjectAtGridPosition(placedObject, gridPosition);
-                
+                //PlaceableObject placedObject = new PlaceableObject(ingameObject);
+                AddObjectAtGridPosition(placeableObject, gridPosition, "down");
+
             }
             else
             {
@@ -76,9 +82,9 @@ public class WorldGrid : MonoBehaviour
         return Instance;
     }
 
-    public void AddObjectAtGridPosition(PlaceableObject placeableObject, GridPosition gridPosition)
+    public void AddObjectAtGridPosition(PlaceableObject placeableObject, GridPosition gridPosition, string direction)
     { 
-        gridObject.AddObject(placeableObject, gridPosition);
+        gridObject.AddObject(placeableObject, gridPosition, direction);
     }
 
     public PlaceableObject GetObjectListAtGridPosition(GridPosition gridPosition)
@@ -86,9 +92,9 @@ public class WorldGrid : MonoBehaviour
         return gridObject.GetObject(gridPosition);
     }
 
-    public bool ObstructionAtGridPosition(GridPosition gridPosition)
+    public bool ObstructionAtGridPosition(GridPosition gridPosition, PlaceableObject placeableObject)
     {
-        return gridObject.isObstructed(gridPosition);
+        return gridObject.isObstructed(gridPosition, placeableObject);
     }
 
     public void RemoveObjectAtGridPosition(GridPosition gridPosition)
