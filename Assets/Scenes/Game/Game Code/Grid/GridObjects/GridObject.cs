@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -53,11 +54,18 @@ public class GridObject
         {
             for (int z = 0; z < objectHeight; z++)
             {
-                if(gridObjectArray[clickedX + x,clickedZ + z] != null)
+                try
                 {
-                    Debug.Log("X:" + x + "Z:" + z);
+                    if(gridObjectArray[clickedX + x,clickedZ + z] != null)
+                    {
+                        return true;
+                    }
+                }
+                catch (IndexOutOfRangeException exception)
+                {
                     return true;
                 }
+                
             }
         }
         return false;
