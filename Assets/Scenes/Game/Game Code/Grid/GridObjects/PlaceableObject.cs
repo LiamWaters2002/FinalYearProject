@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlaceableObject : ScriptableObject //ScriptableObject - Defining types for placeable objects
 {
 
-    [SerializeField] private Transform prefab;
+    [SerializeField] private GameObject prefab;
     [SerializeField] private Transform buttonImage; //Do later...
     [SerializeField] private string name;
     [SerializeField] private int width;
@@ -60,7 +60,7 @@ public class PlaceableObject : ScriptableObject //ScriptableObject - Defining ty
     {
         return name;
     }
-    public Object GetPrefab()
+    public GameObject GetPrefab()
     {
         return prefab;
     }
