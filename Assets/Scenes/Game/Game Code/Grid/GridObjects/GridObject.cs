@@ -18,13 +18,26 @@ public class GridObject
         int width = placeableObject.GetWidth();
         int height = placeableObject.GetHeight();
         Debug.Log("Width = " + width + " Height = " + height);
-        if(direction == "down")
+        
+        //Direction of blocking building positions when object is placed.
+        if(direction == "down" || direction == "up")
         {  
             for(int x = 0; x < width; x++)
             {
                 for(int z = 0; z < height; z++)
                 {
                     
+                    gridObjectArray[gridPosition.getX() + x, gridPosition.getZ() + z] = placeableObject;
+                }
+            }
+        }
+        else if (direction == "left" || direction == "right")
+        {
+            for (int x = 0; x < height; x++)
+            {
+                for (int z = 0; z < width; z++)
+                {
+
                     gridObjectArray[gridPosition.getX() + x, gridPosition.getZ() + z] = placeableObject;
                 }
             }
@@ -65,7 +78,6 @@ public class GridObject
                 {
                     return true;
                 }
-                
             }
         }
         return false;

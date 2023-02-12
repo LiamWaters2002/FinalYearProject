@@ -6,8 +6,9 @@ public class WorldGrid : MonoBehaviour
 {
     public static WorldGrid Instance { get; private set; }
 
-    [SerializeField] private List<PlaceableObject> placeableObjectList;
+    public List<PlaceableObject> placeableObjectList;
     private PlaceableObject placeableObject;
+    private Direction direction;
 
     private Grid grid;
     private GridObject gridObject;
@@ -28,6 +29,8 @@ public class WorldGrid : MonoBehaviour
         grid = new Grid(gridWidth, gridHeight, cellSize);
         gridObject = grid.GetGridObject();
 
+        direction = Direction.DirectionInstance();
+
         placeableObject = placeableObjectList[0]; 
     }
 
@@ -44,7 +47,7 @@ public class WorldGrid : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            if (EventSystem.current.IsPointerOverGameObject())
+            if (EventSystem.current.IsPointerOverGameObject() || EventSystem.current.IsPointerOverGameObject(0) || Input.touchCount > 0 && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
             {
                 return;
             }
@@ -63,9 +66,10 @@ public class WorldGrid : MonoBehaviour
 
             if (!ObstructionAtGridPosition(gridPosition, placeableObject))
             {
-                Object ingameObject = Instantiate(placeableObject.GetPrefab(), position, Quaternion.identity);
+                string objectDirection = direction.getCurrentDirection();
+                Object ingameObject = Instantiate(placeableObject.GetPrefab(), position, Quaternion.Euler(0, placeableObject.GetDirection(objectDirection), 0));
                 //PlaceableObject placedObject = new PlaceableObject(ingameObject);
-                AddObjectAtGridPosition(placeableObject, gridPosition, "down");
+                AddObjectAtGridPosition(placeableObject, gridPosition, objectDirection);
 
             }
             else

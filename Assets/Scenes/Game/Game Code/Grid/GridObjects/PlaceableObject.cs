@@ -24,8 +24,9 @@ public class PlaceableObject : ScriptableObject //ScriptableObject - Defining ty
         worldPositionList = new List<GridPosition>();
     }
 
-    public int GetDirection(Direction direction)
+    public int GetDirection(string direction)
     {
+        Debug.Log("Dirrection:" + direction);
         if (direction.Equals("down"))
         {
             return 0;

@@ -5,21 +5,21 @@ using UnityEngine.EventSystems;
 
 public class Direction : MonoBehaviour
 {
-    private static Direction direction;
-    private string currentDirection;
+    public static Direction direction { get; private set; }
+    private static string currentDirection;
 
-    private void Awake()
+    private Direction()
+    {
+        currentDirection = "down";
+    }
+
+    public static Direction DirectionInstance()
     {
         if (direction == null)
         {
-            direction = this;
+            direction = new Direction();
         }
-        else if (direction != this)
-        {
-            Destroy(gameObject);
-        }
-
-        currentDirection = "Up";//Default - Make this face user later on...
+        return direction;
     }
 
 
@@ -27,17 +27,17 @@ public class Direction : MonoBehaviour
     {
         switch (currentDirection)
         {
-            case "Up":
-                currentDirection = "Right";
+            case "up":
+                currentDirection = "right";
                 break;
-            case "Right":
-                currentDirection = "Down";
+            case "right":
+                currentDirection = "down";
                 break;
-            case "Down":
-                currentDirection = "Left";
+            case "down":
+                currentDirection = "left";
                 break;
-            case "Left":
-                currentDirection = "Up";
+            case "left":
+                currentDirection = "up";
                 break;
         }
         Debug.Log(currentDirection);
@@ -47,17 +47,17 @@ public class Direction : MonoBehaviour
     {
         switch (currentDirection)
         {
-            case "Up":
-                currentDirection = "Left";
+            case "up":
+                currentDirection = "left";
                 break;
-            case "Left":
-                currentDirection = "Down";
+            case "left":
+                currentDirection = "down";
                 break;
-            case "Down":
-                currentDirection = "Right";
+            case "down":
+                currentDirection = "right";
                 break;
-            case "Right":
-                currentDirection = "Up";
+            case "right":
+                currentDirection = "up";
                 break;
         }
         Debug.Log(currentDirection);
@@ -72,5 +72,4 @@ public class Direction : MonoBehaviour
     {
         return currentDirection;
     }
-
 }
