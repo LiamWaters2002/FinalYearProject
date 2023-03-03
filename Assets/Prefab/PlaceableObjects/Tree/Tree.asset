@@ -15,5 +15,5 @@ MonoBehaviour:
   prefab: {fileID: 5869939796041069140, guid: 5b53a3ebf779ea945bb06621d2e86c56, type: 3}
   buttonImage: {fileID: 0}
   name: Tree
-  width: 1
-  height: 1
+  xWidth: 1
+  zDepth: 1

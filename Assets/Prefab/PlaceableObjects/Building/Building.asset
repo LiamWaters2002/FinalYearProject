@@ -15,5 +15,5 @@ MonoBehaviour:
   prefab: {fileID: 5034855539563185112, guid: 3ffa8e90e860ef544a1b73edad81bb1a, type: 3}
   buttonImage: {fileID: 0}
   name: Building
-  width: 5
-  height: 5
+  xWidth: 10
+  zDepth: 8
