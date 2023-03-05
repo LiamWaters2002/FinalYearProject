@@ -6,19 +6,22 @@ public class ActionBarController : MonoBehaviour
 {
     public Canvas ActionBarCanvas;
 
-    public Canvas BuildingCanvas;
+    public Canvas BuildCanvas;
+    public Canvas PlaceCanvas;
     public Canvas LearnCanvas;
 
     public void Start()
     {
         ActionBarCanvas.enabled = true;
-        BuildingCanvas.enabled = false;
+        BuildCanvas.enabled = false;
+        PlaceCanvas.enabled = false;
+        LearnCanvas.enabled = false;
     }
 
     public void OnBuildActionBarClick()
     {
         ActionBarCanvas.enabled = false;
-        BuildingCanvas.enabled = true;
+        BuildCanvas.enabled = true;
 
     }
 

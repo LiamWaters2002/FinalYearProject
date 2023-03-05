@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a022d4078fbc2f04dbdf459f0594a84b, type: 3}
   m_Name: Road
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
+  prefab: {fileID: 5034855539563185112, guid: 4fb160b636cd10c4c81bf57e14c04152, type: 3}
   buttonImage: {fileID: 0}
   name: Road
-  xWidth: 0
-  zDepth: 0
-  yHeight: 0
+  xWidth: 1
+  zDepth: 1

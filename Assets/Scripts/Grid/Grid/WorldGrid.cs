@@ -9,6 +9,7 @@ public class WorldGrid : MonoBehaviour
     public List<PlaceableObject> placeableObjectList;
     private PlaceableObject placeableObject;
     private Direction direction;
+    public PlaceMenu placeMenu;
 
     private Grid grid;
     private GridObject gridObject;
@@ -31,7 +32,7 @@ public class WorldGrid : MonoBehaviour
 
         direction = Direction.DirectionInstance();
 
-        placeableObject = placeableObjectList[0]; 
+        //placeableObject = placeableObjectList[0];
     }
 
     public void Update()
@@ -64,7 +65,8 @@ public class WorldGrid : MonoBehaviour
 
             Vector3 position = new Vector3((pressedPositionX * cellSize), 0.0f, (pressedPositionZ * cellSize));
 
-            if (!ObstructionAtGridPosition(gridPosition, placeableObject))
+            Debug.Log(placeMenu.enabled);
+            if (placeMenu.enabled && !ObstructionAtGridPosition(gridPosition, placeableObject))
             {
                 string objectDirection = direction.getCurrentDirection();
                 Object ingameObject = Instantiate(placeableObject.GetPrefab(), position, Quaternion.Euler(0, placeableObject.GetDirection(objectDirection), 0));
@@ -87,7 +89,7 @@ public class WorldGrid : MonoBehaviour
     }
 
     public void AddObjectAtGridPosition(PlaceableObject placeableObject, GridPosition gridPosition, string direction)
-    { 
+    {
         gridObject.AddObject(placeableObject, gridPosition, direction);
     }
 
@@ -128,12 +130,16 @@ public class WorldGrid : MonoBehaviour
 
     public bool IsValidGridPosition(GridPosition gridPosition)
     {
-        return 
-            gridPosition.getX() >= 0 && 
+        return
+            gridPosition.getX() >= 0 &&
             gridPosition.getZ() >= 0 &&
             gridPosition.getZ() < gridWidth &&
             gridPosition.getZ() < gridHeight
             ;
     }
 
+    internal void setPlacableObject(PlaceableObject placeableObject)
+    {
+        this.placeableObject = placeableObject;
+    }
 }

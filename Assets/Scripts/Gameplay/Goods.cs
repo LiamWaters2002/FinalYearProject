@@ -8,9 +8,9 @@ public class Goods
     protected int normalQuantity; // The amount of normal quality produced items
     protected int luxuryQuantity; // The amount of luxury quality produced items
 
-    public Goods(int startingLowQuantity, int startingNormalQuantity, int startingLuxuryQuantity)
+    public Goods(int startingInferiorQuantity, int startingNormalQuantity, int startingLuxuryQuantity)
     {
-        inferiorQuantity = startingLowQuantity;
+        inferiorQuantity = startingInferiorQuantity;
         normalQuantity = startingNormalQuantity;
         luxuryQuantity = startingLuxuryQuantity;
     }

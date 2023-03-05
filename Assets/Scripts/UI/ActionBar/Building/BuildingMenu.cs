@@ -7,23 +7,32 @@ using UnityEngine.SceneManagement;
 
 public class BuildingMenu : MonoBehaviour
 {
-    //[SerializeField] private List<PlaceableObject> placeableObjectList;
     public GameObject buildingButtonPrefab;
-    public Camera camera;
     public GameObject scrollViewContent;
     public ScrollRect scrollView;
     public Canvas ActionBarCanvas;
     public Canvas BuildMenuCanvas;
+    public Canvas PlaceMenuCanvas;
+    public GeneratePreview generatePreview;
+    public WorldGrid worldGrid;
 
 
     //Move start code to another script in future, it wont run when the menu is disabled...
     void Start()
     {
         Debug.Log("Start");
-        Scene hiddenScene = SceneManager.CreateScene("HiddenScene");
+        //Scene hiddenScene = SceneManager.CreateScene("HiddenScene");
         // Add a button for each object in the menu
-        foreach (PlaceableObject placeableObject in WorldGrid.Instance.placeableObjectList)
+
+        worldGrid = WorldGrid.Instance;
+        generatePreview = GeneratePreview.Instance;
+
+        for (int i = 0; i < generatePreview.placeableObjectList.Count; i++)
         {
+            int x = generatePreview.GetPreviewSize();
+
+            PlaceableObject placeableObject = generatePreview.GetPlaceableObject(i);
+
             Debug.Log("Item added");
             GameObject button = Instantiate(buildingButtonPrefab) as GameObject;
             button.transform.SetParent(scrollViewContent.transform, false);
@@ -32,13 +41,9 @@ public class BuildingMenu : MonoBehaviour
 
             Transform imageComponent = button.gameObject.transform.Find("Image");
             Image image = imageComponent.GetComponent<Image>();
-            //Texture2D texture = AssetPreview.GetMiniThumbnail(placeableObject.GetPrefab());
-            Texture2D texture = createImage(placeableObject, hiddenScene);
 
-            texture.Apply();
-
-            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-            image.sprite = sprite;
+            Debug.Log("Got here");
+            image.sprite = generatePreview.GetPreview(i);
         }
     }
 
@@ -46,7 +51,11 @@ public class BuildingMenu : MonoBehaviour
     void SelectObject(PlaceableObject placeableObject)
     {
         Debug.Log(placeableObject.GetName());
-        scrollView.gameObject.SetActive(false);
+        BuildMenuCanvas.enabled = false;
+        PlaceMenuCanvas.enabled = true;
+
+        worldGrid.setPlacableObject(placeableObject);
+
         //Have placeableObject select in build mode...
     }
 
