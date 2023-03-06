@@ -6,14 +6,14 @@ using UnityEngine.UI;
 public class Graph : MonoBehaviour
 {
     public float minX = 0f;
-    public float maxX = 0f;
+    public float maxX = 100f;
     public float minY = 0f;
-    public float maxY = 10f;
+    public float maxY = 100f;
 
-    public float supplyIntercept = 8f;
+    public float supplyIntercept = 5f;
     public float supplySlope = 0.5f;
-    public float demandIntercept = 8f;
-    public float demandSlope = -0.5f;
+    public float demandIntercept = 50f;
+    public float demandSlope = 0.5f;
 
     private GameObject supplyLine;
     private GameObject demandLine;

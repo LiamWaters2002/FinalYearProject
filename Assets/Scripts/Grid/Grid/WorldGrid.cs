@@ -9,7 +9,7 @@ public class WorldGrid : MonoBehaviour
     public List<PlaceableObject> placeableObjectList;
     private PlaceableObject placeableObject;
     private Direction direction;
-    public PlaceMenu placeMenu;
+    public Canvas placeMenu;
 
     private Grid grid;
     private GridObject gridObject;
