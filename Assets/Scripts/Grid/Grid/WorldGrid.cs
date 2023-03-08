@@ -13,8 +13,8 @@ public class WorldGrid : MonoBehaviour
 
     private Grid grid;
     private GridObject gridObject;
-    int gridWidth = 20;
-    int gridHeight = 20;
+    int gridWidth = 100;
+    int gridHeight = 100;
     float cellSize = 2f;
 
     private void Awake()
@@ -46,13 +46,12 @@ public class WorldGrid : MonoBehaviour
             placeableObject = placeableObjectList[1];
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetMouseButtonDown(0))
         {
             if (EventSystem.current.IsPointerOverGameObject() || EventSystem.current.IsPointerOverGameObject(0) || Input.touchCount > 0 && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
             {
                 return;
             }
-
             GridPosition gridPosition = grid.GetGridPosition(PressedPosition.getClickPosition());
 
             int pressedPositionX = gridPosition.getX();
@@ -66,18 +65,22 @@ public class WorldGrid : MonoBehaviour
             Vector3 position = new Vector3((pressedPositionX * cellSize), 0.0f, (pressedPositionZ * cellSize));
 
             Debug.Log(placeMenu.enabled);
-            if (placeMenu.enabled && !ObstructionAtGridPosition(gridPosition, placeableObject))
+            if (placeMenu.isActiveAndEnabled)
             {
-                string objectDirection = direction.getCurrentDirection();
-                Object ingameObject = Instantiate(placeableObject.GetPrefab(), position, Quaternion.Euler(0, placeableObject.GetDirection(objectDirection), 0));
-                //PlaceableObject placedObject = new PlaceableObject(ingameObject);
-                AddObjectAtGridPosition(placeableObject, gridPosition, objectDirection);
+                if (placeMenu.isRootCanvas && !ObstructionAtGridPosition(gridPosition, placeableObject))
+                {
+                    string objectDirection = direction.getCurrentDirection();
+                    Object ingameObject = Instantiate(placeableObject.GetPrefab(), position, Quaternion.Euler(0, placeableObject.GetDirection(objectDirection), 0));
+                    //PlaceableObject placedObject = new PlaceableObject(ingameObject);
+                    AddObjectAtGridPosition(placeableObject, gridPosition, objectDirection);
 
+                }
+                else
+                {
+                    Debug.Log("Building in the way");
+                }
             }
-            else
-            {
-                Debug.Log("Building in the way");
-            }
+            
 
 
         }

@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Grid
+  - PlaceableObject
   layers:
   - Default
   - TransparentFX
@@ -41,4 +42,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: UI
+    uniqueID: 3029865715
+    locked: 0
+  - name: UIObject3D
+    uniqueID: 2141432297
     locked: 0

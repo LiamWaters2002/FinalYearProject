@@ -7,12 +7,16 @@ public class PressedPosition : MonoBehaviour
     [SerializeField] private Camera mainCamera;
     [SerializeField] private LayerMask planeLayerMask;
 
-    public static PressedPosition pressedPosition;
+    public static PressedPosition Instance;
     public static Vector3 clickPosition;
 
     private void Awake()
     {
-        pressedPosition = this;
+        if(Instance != null)
+        {
+            Destroy(gameObject);
+        }
+        Instance = this;
     }
 
     void Update()
@@ -20,7 +24,7 @@ public class PressedPosition : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             setClickPosition(getRayCastHit());
-        } 
+        }
     }
 
     /// <summary>

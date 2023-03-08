@@ -20,14 +20,14 @@ public class ActionBarController : MonoBehaviour
 
     public void OnBuildActionBarClick()
     {
-        ActionBarCanvas.enabled = false;
+        //ActionBarCanvas.enabled = false;
         BuildCanvas.enabled = true;
 
     }
 
     public void OnLearnActionBarClick()
     {
-        ActionBarCanvas.enabled = false;
+        //ActionBarCanvas.enabled = false;
         LearnCanvas.enabled = true;
 
     }

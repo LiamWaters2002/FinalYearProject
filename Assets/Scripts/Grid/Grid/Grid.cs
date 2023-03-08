@@ -28,7 +28,7 @@ public class Grid
             {
                 GridPosition gridPosition = new GridPosition(x, z);
                 //gridObject.AddObject(this, GridPosition);
-                Debug.DrawLine(GetWorldPosition(gridPosition), GetWorldPosition(gridPosition) + Vector3.right * .9f, Color.red, 1000);
+                //Debug.DrawLine(GetWorldPosition(gridPosition), GetWorldPosition(gridPosition) + Vector3.right * .9f, Color.red, 1000);
             }
         }
     }
