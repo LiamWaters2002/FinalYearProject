@@ -23,8 +23,10 @@ public class Graph : MonoBehaviour
     public float horizontalOffset = 30f; //Moves whole graph left/right
     public float verticalOffset = 30f; //Moves whole graph up/down
 
-    private GameObject supplyLine;
-    private GameObject demandLine;
+    public GameObject supplyLine;
+    public GameObject demandLine;
+    public GameObject xAxis;
+    public GameObject yAxis;
     private GameObject xLabel;
     private GameObject yLabel;
 
@@ -33,63 +35,24 @@ public class Graph : MonoBehaviour
 
     void Start()
     {
-        // Price (y) = Gradient of [supply or demand] (m) x Quantity [Supplied or demanded] (x) + [Minimum or maximum] Price (c)
-
-        // Create the supply curve line renderer
-        supplyLine = new GameObject("Supply Line");
-        supplyLine.transform.parent = transform;
-        LineRenderer supplyLineRenderer = supplyLine.AddComponent<LineRenderer>();
+        //Set supply
+        LineRenderer supplyLineRenderer = supplyLine.GetComponent<LineRenderer>();
         supplyLineRenderer.positionCount = 2;
         Vector3[] supplyPositions = new Vector3[2];
         supplyPositions[0] = new Vector3(minX, supplyIntercept, 0f); // first point
         supplyPositions[1] = new Vector3(maxX, maxY * supplySlope + supplyIntercept, 0f); // second point
         supplyLineRenderer.SetPositions(supplyPositions);
-        supplyLineRenderer.material = Resources.Load<Material>("Materials/Supply");
-        supplyLineRenderer.startWidth = 1f;
-        supplyLineRenderer.endWidth = 1f;
 
-        // Create the demand curve line renderer
-        demandLine = new GameObject("Demand Line");
-        demandLine.transform.parent = transform;
-        LineRenderer demandLineRenderer = demandLine.AddComponent<LineRenderer>();
+        //Set demand
+        LineRenderer demandLineRenderer = demandLine.GetComponent<LineRenderer>();
         demandLineRenderer.positionCount = 2;
         Vector3[] demandPositions = new Vector3[2];
         demandPositions[0] = new Vector3(minX, demandIntercept, 0f);
         demandPositions[1] = new Vector3(maxX, maxY * demandSlope + demandIntercept, 0f); // second point
         demandLineRenderer.SetPositions(demandPositions);
-        demandLineRenderer.material = Resources.Load<Material>("Materials/Demand");
-        demandLineRenderer.startWidth = 1f;
-        demandLineRenderer.endWidth = 1f;
 
-
-        //// Create the x-axis label
-        //xLabel = new GameObject("X Label");
-        //xLabel.transform.parent = transform;
-        //Text xLabelText = xLabel.AddComponent<Text>();
-        //xLabelText.text = "Quantity";
-        //xLabelText.alignment = TextAnchor.LowerCenter;
-        //xLabelText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-        //xLabelText.fontSize = 16;
-        //RectTransform xLabelRect = xLabelText.GetComponent<RectTransform>();
-        //xLabelRect.pivot = new Vector2(0.5f, 0.05f);
-        //xLabelRect.anchoredPosition = new Vector2(maxX / 2, 0f);
-
-        //// Create the y-axis label
-        //yLabel = new GameObject("Y Label");
-        //yLabel.transform.parent = transform;
-        //Text yLabelText = yLabel.AddComponent<Text>();
-        //yLabelText.text = "Price";
-        //yLabelText.alignment = TextAnchor.UpperCenter;
-        //yLabelText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-        //yLabelText.fontSize = 16;
-        //RectTransform yLabelRect = yLabelText.GetComponent<RectTransform>();
-        //yLabelRect.pivot = new Vector2(0.05f, 0.5f);
-        //yLabelRect.anchoredPosition = new Vector2(0f, maxY / 2);
-
-        // Create the x-axis line renderer
-        GameObject xAxis = new GameObject("X Axis");
-        xAxis.transform.parent = transform;
-        LineRenderer xAxisLineRenderer = xAxis.AddComponent<LineRenderer>();
+        //Set X-Axis line
+        LineRenderer xAxisLineRenderer = xAxis.GetComponent<LineRenderer>();
         xAxisLineRenderer.positionCount = 2;
         Vector3[] xAxisPositions = new Vector3[2];
         xAxisPositions[0] = new Vector3(minX, 0f, 0f);
@@ -99,10 +62,8 @@ public class Graph : MonoBehaviour
         xAxisLineRenderer.startWidth = 1f;
         xAxisLineRenderer.endWidth = 1f;
 
-        // Create the y-axis line renderer
-        GameObject yAxis = new GameObject("Y Axis");
-        yAxis.transform.parent = transform;
-        LineRenderer yAxisLineRenderer = yAxis.AddComponent<LineRenderer>();
+        //Set Y-Axis line
+        LineRenderer yAxisLineRenderer = yAxis.GetComponent<LineRenderer>();
         yAxisLineRenderer.positionCount = 2;
         Vector3[] yAxisPositions = new Vector3[2];
         yAxisPositions[0] = new Vector3(0f, minY, 0f);
@@ -111,25 +72,6 @@ public class Graph : MonoBehaviour
         yAxisLineRenderer.material = new Material(Shader.Find("Sprites/Default"));
         yAxisLineRenderer.startWidth = 1f;
         yAxisLineRenderer.endWidth = 1f;
-
-        horizontalOffset = -1000f;
-        verticalOffset = -1000f;
-
-        //// Create a new game object for the x-axis label
-        //GameObject xAxisLabel = new GameObject("X Axis Label");
-        //xAxisLabel.transform.parent = xAxis.transform; // Make the label a child of the x-axis
-        //xAxisLabel.transform.localPosition = new Vector3(maxX * scaleXAxis + horizontalOffset + 0.5f, verticalOffset + 2f, 0f); // Position the label slightly to the right of the end of the x-axis
-        //TextMesh textMesh = xAxisLabel.AddComponent<TextMesh>(); // Add a TextMesh component to the label
-        //textMesh.text = "Quantity"; // Set the text of the label
-        //textMesh.fontSize = 50; // Set the font size of the text
-
-        //// Create a new game object for the y-axis label
-        //GameObject yAxisLabel = new GameObject("Y Axis Label");
-        //yAxisLabel.transform.parent = yAxis.transform; // Make the label a child of the y-axis
-        //yAxisLabel.transform.localPosition = new Vector3(horizontalOffset, maxY * scaleYAxis + verticalOffset + 2f, 0f);
-        //TextMesh textMesh2 = yAxisLabel.AddComponent<TextMesh>(); // Add a TextMesh component to the label
-        //textMesh2.text = "Y Axis Label"; // Set the text of the label
-        //textMesh2.fontSize = 20; // Set the font size of the text
     }
 
     public void Update()
@@ -179,7 +121,6 @@ public class Graph : MonoBehaviour
         horizontalOffset = horizontalOffset - 30;
         verticalOffset = verticalOffset - 30;
 
-        GameObject xAxis = GameObject.Find("X Axis");
         LineRenderer xAxisLineRenderer = xAxis.GetComponent<LineRenderer>();
         Vector3[] xAxisPositions = new Vector3[2];
         xAxisPositions[0] = new Vector3(minX * scaleXAxis + horizontalOffset, verticalOffset, 0f);
@@ -192,7 +133,6 @@ public class Graph : MonoBehaviour
         horizontalOffset = horizontalOffset - 30;
         verticalOffset = verticalOffset - 30;
 
-        GameObject yAxis = GameObject.Find("Y Axis");
         LineRenderer yAxisLineRenderer = yAxis.GetComponent<LineRenderer>();
         Vector3[] yAxisPositions = new Vector3[2];
         yAxisPositions[0] = new Vector3(horizontalOffset, minY * scaleYAxis + verticalOffset, 0f);
