@@ -80,9 +80,15 @@ public class WorldGrid : MonoBehaviour
                     Debug.Log("Building in the way");
                 }
             }
-            
+            else
+            {
+                if (ObstructionAtGridPosition(gridPosition, placeableObject))
+                {
+                    PlaceableObject gridObject = GetObjectAtGridPosition(gridPosition);
 
-
+                }
+                
+            }
         }
     }
 
@@ -96,7 +102,7 @@ public class WorldGrid : MonoBehaviour
         gridObject.AddObject(placeableObject, gridPosition, direction);
     }
 
-    public PlaceableObject GetObjectListAtGridPosition(GridPosition gridPosition)
+    public PlaceableObject GetObjectAtGridPosition(GridPosition gridPosition)
     {
         return gridObject.GetObject(gridPosition);
     }

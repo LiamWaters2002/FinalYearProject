@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+[DefaultExecutionOrder(1)]
 public class GeneratePreview : MonoBehaviour
 {
     public static GeneratePreview Instance;
@@ -23,7 +24,6 @@ public class GeneratePreview : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
         Scene hiddenScene = SceneManager.CreateScene("HiddenScene");
         foreach (PlaceableObject placeableObject in placeableObjectList)
         {
@@ -34,6 +34,8 @@ public class GeneratePreview : MonoBehaviour
             previewObjectImages.Add(sprite);
         }
     }
+
+
 
     public Texture2D createImage(PlaceableObject placeableObject, Scene hiddenScene)
     {
@@ -51,7 +53,7 @@ public class GeneratePreview : MonoBehaviour
         camera.orthographicSize = 5;
         camera.nearClipPlane = 0.01f;
         camera.farClipPlane = 1000f;
-        camera.clearFlags = CameraClearFlags.SolidColor;
+        camera.clearFlags = CameraClearFlags.Skybox;
         camera.backgroundColor = new Color(1f, 1f, 1f, 0f);
 
         // Create a RenderTexture to hold the camera view
@@ -70,6 +72,7 @@ public class GeneratePreview : MonoBehaviour
         // Destroy the instantiated prefab and unload the hidden scene
         SceneManager.UnloadSceneAsync(hiddenScene);
         DestroyImmediate(prefabInstance);
+        DestroyImmediate(cameraObject);
 
         return texture;
     }

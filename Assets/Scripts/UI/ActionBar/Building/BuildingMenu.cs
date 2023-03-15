@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class BuildingMenu : MonoBehaviour
 {
@@ -41,9 +42,19 @@ public class BuildingMenu : MonoBehaviour
 
             Transform imageComponent = button.gameObject.transform.Find("Image");
             Image image = imageComponent.GetComponent<Image>();
-
-            Debug.Log("Got here");
             image.sprite = generatePreview.GetPreview(i);
+
+            Transform name = button.transform.Find("Name");
+            Text txtName = name.GetComponent<Text>();
+            txtName.text = placeableObject.GetName();
+
+            Transform description = button.transform.Find("Description");
+            Text txtDescription = description.GetComponent<Text>();
+            txtDescription.text = placeableObject.GetDescription();
+
+            Transform price = button.transform.Find("Price");
+            Text txtPrice = price.GetComponent<Text>();
+            txtPrice.text = placeableObject.GetPrice().ToString("n0");
         }
     }
 
@@ -64,46 +75,4 @@ public class BuildingMenu : MonoBehaviour
         BuildMenuCanvas.enabled = false;
         ActionBarCanvas.enabled = true;
     }
-
-    public Texture2D createImage(PlaceableObject placeableObject, Scene hiddenScene)
-    {
-        // Load the prefab from the Resources folder
-
-        // Instantiate the prefab in a hidden scene
-        GameObject prefabInstance = Instantiate(placeableObject.GetPrefab());
-        prefabInstance.transform.position = new Vector3(0, 0, 10); // move the prefab away from the camera
-        SceneManager.MoveGameObjectToScene(prefabInstance, SceneManager.GetSceneByName("hiddenScene"));
-
-        // Create and configure the camera
-        GameObject cameraObject = new GameObject("Camera");
-        Camera camera = cameraObject.AddComponent<Camera>();
-        camera.transform.position = new Vector3(placeableObject.GetxWidth() * 30, 50, -50); // position the camera in front of the prefab
-        camera.transform.LookAt(prefabInstance.transform);
-        camera.orthographic = true;
-        camera.orthographicSize = 5;
-        camera.nearClipPlane = 0.01f;
-        camera.farClipPlane = 1000f;
-        camera.clearFlags = CameraClearFlags.SolidColor;
-        camera.backgroundColor = new Color(1f, 1f, 1f, 0f);
-
-        // Create a RenderTexture to hold the camera view
-        RenderTexture renderTexture = new RenderTexture(1024, 1024, 24);
-
-        // Render the camera view to the RenderTexture
-        camera.targetTexture = renderTexture;
-        camera.Render();
-
-        // Save the RenderTexture as a Texture2D
-        Texture2D texture = new Texture2D(1024, 1024, TextureFormat.RGB24, false);
-        RenderTexture.active = renderTexture;
-        texture.ReadPixels(new Rect(0, 0, 1024, 1024), 0, 0);
-        texture.Apply();
-
-        // Destroy the instantiated prefab and unload the hidden scene
-        SceneManager.UnloadSceneAsync(hiddenScene);
-        DestroyImmediate(prefabInstance);
-
-        return texture;
-    }
-
-    }
+}

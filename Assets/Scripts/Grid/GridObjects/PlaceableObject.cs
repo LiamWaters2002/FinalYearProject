@@ -9,6 +9,8 @@ public class PlaceableObject : ScriptableObject //ScriptableObject - Defining ty
     [SerializeField] private GameObject prefab;
     [SerializeField] private Transform buttonImage; //Do later...
     [SerializeField] private string name;
+    [SerializeField] private string description;
+    [SerializeField] private int price;
     [SerializeField] private int xWidth;
     [SerializeField] private int zDepth;
     private Object ingameObject;
@@ -24,6 +26,7 @@ public class PlaceableObject : ScriptableObject //ScriptableObject - Defining ty
         worldPositionList = new List<GridPosition>();
     }
 
+    //Gets the angles of the placeableObject.
     public int GetDirection(string direction)
     {
         Debug.Log("Dirrection:" + direction);
@@ -46,6 +49,21 @@ public class PlaceableObject : ScriptableObject //ScriptableObject - Defining ty
         return 0;
     }
 
+    public string GetName()
+    {
+        return name;
+    }
+
+    public string GetDescription()
+    {
+        return description;
+    }
+
+    public int GetPrice()
+    {
+        return price;
+    }
+
     public int GetxWidth()
     {
         return xWidth;
@@ -56,10 +74,6 @@ public class PlaceableObject : ScriptableObject //ScriptableObject - Defining ty
         return zDepth;
     }
 
-    public string GetName()
-    {
-        return name;
-    }
     public GameObject GetPrefab()
     {
         return prefab;

@@ -15,5 +15,7 @@ MonoBehaviour:
   prefab: {fileID: 5034855539563185112, guid: 4fb160b636cd10c4c81bf57e14c04152, type: 3}
   buttonImage: {fileID: 0}
   name: Road
+  description: Used for travelling
+  price: 100
   xWidth: 5
   zDepth: 5

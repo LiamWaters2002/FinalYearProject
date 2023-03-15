@@ -28,9 +28,20 @@ public class CameraController : MonoBehaviour
         float moveSpeed = 10f;
 
         Vector3 moveVector = transform.forward * inputMoveDirection.z + transform.right * inputMoveDirection.x;
+        moveVector.y = 0; // keep the y level constant
         transform.position += moveVector * moveSpeed * Time.deltaTime;
 
+        float yChange = 10f; // adjust the amount of change as you like
 
+        if (Input.GetKey(KeyCode.E)) // e button
+        {
+            transform.position += Vector3.up * yChange * Time.deltaTime; // increase the y level of this object smoothly
+        }
+
+        if (Input.GetKey(KeyCode.Q)) // q button
+        {
+            transform.position -= Vector3.up * yChange * Time.deltaTime; // decrease the y level of this object smoothly
+        }
 
 
         Vector3 rotationVector = new Vector3(0, 0, 0);
