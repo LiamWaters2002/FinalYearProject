@@ -30,11 +30,18 @@ public class Graph : MonoBehaviour
     public GameObject demandLine;
     public GameObject xAxis;
     public GameObject yAxis;
-    private GameObject xLabel;
-    private GameObject yLabel;
+    private GameObject supplyLabel;
+    private GameObject demandLabel;
+    public LineRenderer[] horizontalReadLine;
+    public LineRenderer[] verticalReadLine;
+
+    private Vector3[] horizontalReadLinePositions;
+    private Vector3[] verticalReadLinePositions;
 
     GameObject shiftedDemandCurve;
+    GameObject shiftedSupplyCurve;
     public bool demandShift = false;
+    public bool supplyShift = false;
 
     void Start()
     {
@@ -79,6 +86,16 @@ public class Graph : MonoBehaviour
         yAxisLineRenderer.material = new Material(Shader.Find("Sprites/Default"));
         yAxisLineRenderer.startWidth = 1f;
         yAxisLineRenderer.endWidth = 1f;
+
+        supplyLabel = GameObject.Find("Supply Label");
+        demandLabel = GameObject.Find("Demand Label");
+
+        //Only need to get data for one either supply/demand's readlines as they start off in same position.
+        verticalReadLinePositions = new Vector3[verticalReadLine[0].positionCount];
+        verticalReadLine[0].GetPositions(verticalReadLinePositions);
+        horizontalReadLinePositions = new Vector3[horizontalReadLine[0].positionCount];
+        horizontalReadLine[0].GetPositions(horizontalReadLinePositions);
+
     }
 
     public void Update()
@@ -94,10 +111,20 @@ public class Graph : MonoBehaviour
                 shiftedDemandCurve = Instantiate(demandLine);
                 demandShift = true;
             }
-            ShiftDemand(shiftedDemandCurve, -30);
+            ShiftDemand(shiftedDemandCurve, 30); //negative - left, positive - right
         }
 
-        //CreateIntersectionLines(horizontalOffset, verticalOffset);
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            if (!supplyShift)
+            {
+                shiftedSupplyCurve = Instantiate(supplyLine);
+                supplyShift = true;
+            }
+            ShiftSupply(shiftedSupplyCurve, -30); //negative - left, positive - right
+        }
+
+        //Createline1s(horizontalOffset, verticalOffset);
     }
 
     public void UpdateCurves(float horizontalOffset, float verticalOffset, float supplyGradient, float demandGradient)
@@ -113,6 +140,8 @@ public class Graph : MonoBehaviour
 
         supplyLine.GetComponent<LineRenderer>().SetPositions(supplyPositions);
 
+        supplyLabel.transform.position = supplyLine.GetComponent<LineRenderer>().GetPosition(1);
+
 
         Vector3[] demandPositions = new Vector3[2];
         demandPositions[0] = new Vector3(-center.x + horizontalOffset, center.y * demandGradient + verticalOffset, 0f); // first point
@@ -121,6 +150,30 @@ public class Graph : MonoBehaviour
         demandPositions[1] = rotation * demandPositions[1] + center;
 
         demandLine.GetComponent<LineRenderer>().SetPositions(demandPositions);
+
+        //demandLabel = demandLine.transform.Find("Demand Label");
+
+        Vector3 supplyLabelPosition = supplyPositions[1] + new Vector3(5, 10, 0);
+        Vector3 demandLabelPosition = demandPositions[1] + new Vector3(5, 2, 0);
+
+        demandLabel.transform.position = demandLabelPosition;
+        supplyLabel.transform.position = supplyLabelPosition;
+
+        Vector3[] updatedHorizontalReadLinePositions = new Vector3[horizontalReadLine[0].positionCount];
+        Vector3[] updatedVerticalReadLinePositions = new Vector3[verticalReadLine[0].positionCount];
+
+        // Update the positions using the horizontal and vertical offsets for the read lines...
+        updatedHorizontalReadLinePositions[0] = new Vector3(horizontalReadLinePositions[0].x + horizontalOffset, horizontalReadLinePositions[0].y + verticalOffset, 0f);
+        updatedHorizontalReadLinePositions[1] = new Vector3(horizontalReadLinePositions[1].x + horizontalOffset, horizontalReadLinePositions[1].y + verticalOffset, 0f);
+
+        updatedVerticalReadLinePositions[0] = new Vector3(verticalReadLinePositions[0].x + horizontalOffset, verticalReadLinePositions[0].y + verticalOffset, 0f);
+        updatedVerticalReadLinePositions[1] = new Vector3(verticalReadLinePositions[1].x + horizontalOffset, verticalReadLinePositions[1].y + verticalOffset, 0f);
+
+        // Set the updated positions back to the line renderer
+        horizontalReadLine[0].SetPositions(updatedHorizontalReadLinePositions);
+        verticalReadLine[0].SetPositions(updatedVerticalReadLinePositions);
+        horizontalReadLine[1].SetPositions(updatedHorizontalReadLinePositions);
+        verticalReadLine[1].SetPositions(updatedVerticalReadLinePositions);
     }
 
     void UpdateXAxis(float scaleXAxis, float horizontalOffset, float verticalOffset)
@@ -152,23 +205,26 @@ public class Graph : MonoBehaviour
         Transform intersectionContainer = shiftedDemandCurve.transform.Find("Intersection Line Container");
         LineRenderer[] intersectionList = intersectionContainer.GetComponentsInChildren<LineRenderer>();
 
-
-
-
         LineRenderer demandCurve = shiftedDemandCurve.GetComponent<LineRenderer>();
-        MoveLineDiagonally(demandCurve, demandGradient, amount, amount);
-        MoveIntersectionLineDiagonally(intersectionList[0], demandCurve, "demand2");
-        MoveIntersectionLineDiagonally(intersectionList[1], demandCurve, "demand1");
+
+        MoveLineDiagonally(demandCurve, demandGradient, amount, amount, "demand");
+        Moveline1Diagonally(intersectionList[0], demandCurve, "demand2");
+        Moveline1Diagonally(intersectionList[1], demandCurve, "demand1");
     }
 
-    void ShiftSupply(string direction)
+    void ShiftSupply(GameObject shiftedSupplyCurve, int amount)
     {
-        GameObject shiftedSupplyCurve = Instantiate(supplyLine);
-        LineRenderer lineRenderer = shiftedSupplyCurve.GetComponent<LineRenderer>();
-        MoveLineDiagonally(lineRenderer, supplyGradient, -30, -30);
+        Transform intersectionContainer = shiftedSupplyCurve.transform.Find("Intersection Line Container");
+        LineRenderer[] intersectionList = intersectionContainer.GetComponentsInChildren<LineRenderer>();
+
+        LineRenderer supplyCurve = shiftedSupplyCurve.GetComponent<LineRenderer>();
+
+        MoveLineDiagonally(supplyCurve, supplyGradient, amount, amount, "supply");
+        Moveline1Diagonally(intersectionList[0], supplyCurve, "supply2");
+        Moveline1Diagonally(intersectionList[1], supplyCurve, "supply1");
     }
 
-    public void MoveLineDiagonally(LineRenderer lineRenderer, float gradient, float moveAmountX, float moveAmountY)
+    public void MoveLineDiagonally(LineRenderer lineRenderer, float gradient, float moveAmountX, float moveAmountY, string curveType)
     {
         Vector3 startPoint = lineRenderer.GetPosition(0);
         Vector3 endPoint = lineRenderer.GetPosition(1);
@@ -177,79 +233,99 @@ public class Graph : MonoBehaviour
         float distanceX = moveAmountX / Mathf.Sqrt(1 + gradient * gradient);
         float distanceY = moveAmountY / Mathf.Sqrt(1 + gradient * gradient);
 
+        Vector3 newStartPoint = new Vector3(0,0,0);
+        Vector3 newEndPoint = new Vector3(0, 0, 0); ;
         // Calculate the new positions of the line's starting and ending points based on the calculated distances
-        Vector3 newStartPoint = new Vector3(startPoint.x + distanceX, startPoint.y + distanceY, startPoint.z);
-        Vector3 newEndPoint = new Vector3(endPoint.x + distanceX, endPoint.y + distanceY, endPoint.z);
+        if (curveType.Equals("demand"))
+        {
+            newStartPoint = new Vector3(startPoint.x + distanceX, startPoint.y + distanceY, startPoint.z);
+            newEndPoint = new Vector3(endPoint.x + distanceX, endPoint.y + distanceY, endPoint.z);
+        }
+        else if (curveType.Equals("supply"))
+        {
+            newStartPoint = new Vector3(startPoint.x + distanceX, startPoint.y - distanceY, startPoint.z);
+            newEndPoint = new Vector3(endPoint.x + distanceX, endPoint.y - distanceY, endPoint.z);
+        }
+
 
         // Update the positions of the line's starting and ending points
         lineRenderer.SetPosition(0, newStartPoint);
         lineRenderer.SetPosition(1, newEndPoint);
     }
 
-    public void MoveIntersectionLineDiagonally(LineRenderer intersectionLine, LineRenderer newCurve, string curveType)
+    public void Moveline1Diagonally(LineRenderer line1, LineRenderer newCurve, string curveType)
     {
-        Vector3 intersectionLineStart = intersectionLine.GetPosition(0);
-        Vector3 intersectionLineEnd = intersectionLine.GetPosition(1);
+        Vector3 line1Start = line1.GetPosition(0);
+        Vector3 line1End = line1.GetPosition(1);
 
-        Vector3 newCurveStart = intersectionLine.GetPosition(0);
-        Vector3 NewCurveLineEnd = intersectionLine.GetPosition(1);
+        Vector3 newCurveStart = line1.GetPosition(0);
+        Vector3 NewCurveLineEnd = line1.GetPosition(1);
 
         if (curveType.Equals("demand1"))
         {
             LineRenderer supplyLineRenderer = supplyLine.GetComponent<LineRenderer>();
-            Vector3 supplyLineStart = supplyLineRenderer.GetPosition(0);
-            Vector3 supplyLineEnd = supplyLineRenderer.GetPosition(1);
             Vector3 intersectionPoint = GetIntersectionPoint(newCurve, supplyLineRenderer);
-            intersectionLine.SetPosition(0, GetIntersectionPoint(newCurve, supplyLineRenderer));
-            intersectionLineEnd.x = intersectionPoint.x;
-            intersectionLine.SetPosition(1, intersectionLineEnd);
+            line1.SetPosition(0, GetIntersectionPoint(newCurve, supplyLineRenderer));
+            line1End.x = intersectionPoint.x;
+            line1.SetPosition(1, line1End);
 
 
         }
         if (curveType.Equals("demand2"))
         {
             LineRenderer supplyLineRenderer = supplyLine.GetComponent<LineRenderer>();
-            Vector3 supplyLineStart = supplyLineRenderer.GetPosition(0);
-            Vector3 supplyLineEnd = supplyLineRenderer.GetPosition(1);
             Vector3 intersectionPoint = GetIntersectionPoint(newCurve, supplyLineRenderer);
-            intersectionLine.SetPosition(0, GetIntersectionPoint(newCurve, supplyLineRenderer));
-            intersectionLineEnd.y = intersectionPoint.y;
-            intersectionLine.SetPosition(1, intersectionLineEnd);
+            line1.SetPosition(0, GetIntersectionPoint(newCurve, supplyLineRenderer));
+            line1End.y = intersectionPoint.y;
+            line1.SetPosition(1, line1End);
 
 
         }
-        else if (curveType.Equals("supply"))
+        if (curveType.Equals("supply1"))
         {
             LineRenderer demandLineRenderer = demandLine.GetComponent<LineRenderer>();
-            Vector3 demandLineStart = demandLineRenderer.GetPosition(0);
-            Vector3 demandLineEnd = demandLineRenderer.GetPosition(1);
-            intersectionLine.SetPosition(0, GetIntersectionPoint(newCurve, demandLineRenderer));
+            Vector3 intersectionPoint = GetIntersectionPoint(newCurve, demandLineRenderer);
+            line1.SetPosition(0, GetIntersectionPoint(newCurve, demandLineRenderer));
+            line1End.x = intersectionPoint.x;
+            line1.SetPosition(1, line1End);
+
+
+        }
+        if (curveType.Equals("supply2"))
+        {
+            LineRenderer demandLineRenderer = demandLine.GetComponent<LineRenderer>();
+            Vector3 intersectionPoint = GetIntersectionPoint(newCurve, demandLineRenderer);
+            line1.SetPosition(0, GetIntersectionPoint(newCurve, demandLineRenderer));
+            //line1Start.y = intersectionPoint.y;
+            line1End.y = intersectionPoint.y;
+            line1.SetPosition(1, line1End);
+
+
         }
     }
 
-    public Vector3 GetIntersectionPoint(LineRenderer intersectionLine, LineRenderer otherLine)
+    public Vector3 GetIntersectionPoint(LineRenderer line1, LineRenderer line2)
     {
-        Vector3 intersection = Vector3.zero;
-        Vector3 intersectionLineStart = intersectionLine.GetPosition(0);
-        Vector3 intersectionLineEnd = intersectionLine.GetPosition(1);
-        Vector3 otherLineStart = otherLine.GetPosition(0);
-        Vector3 otherLineEnd = otherLine.GetPosition(1);
-        float a1 = intersectionLineEnd.y - intersectionLineStart.y;
-        float b1 = intersectionLineStart.x - intersectionLineEnd.x;
-        float c1 = a1 * intersectionLineStart.x + b1 * intersectionLineStart.y;
-        float a2 = otherLineEnd.y - otherLineStart.y;
-        float b2 = otherLineStart.x - otherLineEnd.x;
-        float c2 = a2 * otherLineStart.x + b2 * otherLineStart.y;
-        float delta = a1 * b2 - a2 * b1;
-        if (delta == 0)
-        {
-            Debug.Log("Lines are parallel");
-        }
-        else
-        {
-            intersection.x = (b2 * c1 - b1 * c2) / delta;
-            intersection.y = (a1 * c2 - a2 * c1) / delta;
-        }
+        Vector3 intersection = new Vector3(0, 0, 0);
+
+        Vector3 line1Start = line1.GetPosition(0);
+        Vector3 line1End = line1.GetPosition(1);
+
+        Vector3 line2Start = line2.GetPosition(0);
+        Vector3 line2End = line2.GetPosition(1);
+
+        float m1 = (line1End.y - line1Start.y) / (line1End.x - line1Start.x); //(y2 - y1) / (x2 - x1)
+        float c1 = line1Start.y - m1 * line1Start.x; // y = mx + c -> c = y - mx
+
+        float m2 = (line2End.y - line2Start.y) / (line2End.x - line2Start.x);
+        float c2 = line2Start.y - m2 * line2Start.x;
+
+        float x = (c2 - c1) / (m1 - m2); // mx = c -> x = c/m
+
+        float y = (m1 * x) + c1; //plug in x
+
+        intersection = new Vector3(x, y, 0);
+
         return intersection;
     }
 }
