@@ -26,6 +26,8 @@ public class Graph : MonoBehaviour
 
     public float curveThickness;
 
+    public GameObject demandLineContainer;
+    public GameObject supplyLineContainer;
     public GameObject supplyLine;
     public GameObject demandLine;
     public GameObject xAxis;
@@ -45,6 +47,9 @@ public class Graph : MonoBehaviour
 
     void Start()
     {
+
+        supplyLine = supplyLineContainer.transform.Find("Supply Line").gameObject;
+        demandLine = demandLineContainer.transform.Find("Demand Line").gameObject;
         //Set supply
         LineRenderer supplyLineRenderer = supplyLine.GetComponent<LineRenderer>();
         supplyLineRenderer.startWidth = curveThickness;
@@ -108,7 +113,8 @@ public class Graph : MonoBehaviour
         {
             if (!demandShift)
             {
-                shiftedDemandCurve = Instantiate(demandLine);
+                shiftedDemandCurve = Instantiate(demandLineContainer);
+                shiftedDemandCurve.transform.parent = this.transform;
                 demandShift = true;
             }
             ShiftDemand(shiftedDemandCurve, 30); //negative - left, positive - right
@@ -118,7 +124,7 @@ public class Graph : MonoBehaviour
         {
             if (!supplyShift)
             {
-                shiftedSupplyCurve = Instantiate(supplyLine);
+                shiftedSupplyCurve = Instantiate(supplyLineContainer);
                 supplyShift = true;
             }
             ShiftSupply(shiftedSupplyCurve, -30); //negative - left, positive - right
@@ -200,16 +206,34 @@ public class Graph : MonoBehaviour
         yAxisLineRenderer.SetPositions(yAxisPositions);
     }
 
-    void ShiftDemand(GameObject shiftedDemandCurve, int amount)
+    void ShiftDemand(GameObject demandLineContainer, int amount)
     {
-        Transform intersectionContainer = shiftedDemandCurve.transform.Find("Intersection Line Container");
+        Transform demandCurve = demandLineContainer.transform.Find("Demand Line");
+
+        GameObject demandLabel = demandLineContainer.transform.Find("Demand Label").gameObject;
+        TextMesh demandLabelText = demandLabel.GetComponent<TextMesh>();
+
+        int demandLineCount = -1; //We exclude the initial demand line 
+
+        //for each child in graph
+        foreach (Transform child in this.transform)
+        {
+            if (child.CompareTag("Demand"))
+            {
+                demandLineCount++;
+            }
+        }
+        demandLabelText.text = demandLabelText.text + demandLineCount;
+
+
+        Transform intersectionContainer = demandCurve.transform.Find("Intersection Line Container");
         LineRenderer[] intersectionList = intersectionContainer.GetComponentsInChildren<LineRenderer>();
 
-        LineRenderer demandCurve = shiftedDemandCurve.GetComponent<LineRenderer>();
+        LineRenderer demandLineRenderer = demandCurve.GetComponent<LineRenderer>();
 
-        MoveLineDiagonally(demandCurve, demandGradient, amount, amount, "demand");
-        Moveline1Diagonally(intersectionList[0], demandCurve, "demand2");
-        Moveline1Diagonally(intersectionList[1], demandCurve, "demand1");
+        MoveLineDiagonally(demandLineRenderer, demandGradient, amount, amount, "demand", demandLabel);
+        Moveline1Diagonally(intersectionList[0], demandLineRenderer, "demand2");
+        Moveline1Diagonally(intersectionList[1], demandLineRenderer, "demand1");
     }
 
     void ShiftSupply(GameObject shiftedSupplyCurve, int amount)
@@ -219,12 +243,12 @@ public class Graph : MonoBehaviour
 
         LineRenderer supplyCurve = shiftedSupplyCurve.GetComponent<LineRenderer>();
 
-        MoveLineDiagonally(supplyCurve, supplyGradient, amount, amount, "supply");
+        MoveLineDiagonally(supplyCurve, supplyGradient, amount, amount, "supply", supplyLabel);
         Moveline1Diagonally(intersectionList[0], supplyCurve, "supply2");
         Moveline1Diagonally(intersectionList[1], supplyCurve, "supply1");
     }
 
-    public void MoveLineDiagonally(LineRenderer lineRenderer, float gradient, float moveAmountX, float moveAmountY, string curveType)
+    public void MoveLineDiagonally(LineRenderer lineRenderer, float gradient, float moveAmountX, float moveAmountY, string curveType, GameObject label)
     {
         Vector3 startPoint = lineRenderer.GetPosition(0);
         Vector3 endPoint = lineRenderer.GetPosition(1);
@@ -251,6 +275,8 @@ public class Graph : MonoBehaviour
         // Update the positions of the line's starting and ending points
         lineRenderer.SetPosition(0, newStartPoint);
         lineRenderer.SetPosition(1, newEndPoint);
+
+        label.transform.position = newEndPoint;
     }
 
     public void Moveline1Diagonally(LineRenderer line1, LineRenderer newCurve, string curveType)
@@ -315,7 +341,7 @@ public class Graph : MonoBehaviour
         Vector3 line2End = line2.GetPosition(1);
 
         float m1 = (line1End.y - line1Start.y) / (line1End.x - line1Start.x); //(y2 - y1) / (x2 - x1)
-        float c1 = line1Start.y - m1 * line1Start.x; // y = mx + c -> c = y - mx
+        float c1 = line1Start.y - m1 * line1Start.x; // y = mx + c -> y - mx = c
 
         float m2 = (line2End.y - line2Start.y) / (line2End.x - line2Start.x);
         float c2 = line2Start.y - m2 * line2Start.x;
