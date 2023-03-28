@@ -1,11 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Direction : MonoBehaviour
 {
-    public static Direction direction { get; private set; }
+    public static Direction Instance { get; private set; }
     private static string currentDirection;
 
     private Direction()
@@ -13,17 +15,28 @@ public class Direction : MonoBehaviour
         currentDirection = "down";
     }
 
-    public static Direction DirectionInstance()
+    //public static Direction DirectionInstance()
+    //{
+    //    return Instance;
+    //    if (direction == null)
+    //    {
+    //        direction = new direction();
+    //    }
+    //    return direction;
+    //}
+
+    private void Awake()
     {
-        if (direction == null)
+        if (Instance != null)
         {
-            direction = new Direction();
+            return;
         }
-        return direction;
+        Instance = this;
     }
 
 
-    public void TurnClockwise()
+
+        public void TurnClockwise()
     {
         switch (currentDirection)
         {
@@ -63,13 +76,38 @@ public class Direction : MonoBehaviour
         Debug.Log(currentDirection);
     }
 
-    public Direction getDirection()
-    {
-        return direction;
-    }
+    //public Direction getDirection()
+    //{
+    //    return direction;
+    //}
 
     public string getCurrentDirection()
     {
         return currentDirection;
+    }
+
+    public Vector3 getOffset(PlaceableObject placeableObject, float cellSize)
+    {
+
+        Vector3 offset = new Vector3(0, 0, 0);
+
+        if (currentDirection.Equals("down"))
+        {
+            offset = new Vector3(0, 0, 0);
+        }
+        else if (currentDirection.Equals("left"))
+        {
+            offset = new Vector3(0, 0, (placeableObject.GetxWidth() * cellSize) - cellSize);
+        }
+        else if (currentDirection.Equals("up"))
+        {
+            offset = new Vector3((placeableObject.GetxWidth() * cellSize) - cellSize, 0, (placeableObject.GetzDepth() * cellSize) - cellSize);
+        }
+        else if (currentDirection.Equals("right"))
+        {
+            offset = new Vector3((placeableObject.GetzDepth() * cellSize) - cellSize, 0, 0);
+        }
+
+        return offset;
     }
 }

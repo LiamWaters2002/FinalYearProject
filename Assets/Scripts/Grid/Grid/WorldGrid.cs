@@ -33,7 +33,7 @@ public class WorldGrid : MonoBehaviour
         grid = new Grid(gridWidth, gridHeight, cellSize);
         gridObject = grid.GetGridObject();
 
-        direction = Direction.DirectionInstance();
+        direction = Direction.Instance;
 
         //placeableObject = placeableObjectList[0];
     }
@@ -82,24 +82,10 @@ public class WorldGrid : MonoBehaviour
                         governmentMoney.text = result.ToString("N0");
                         string objectDirection = direction.getCurrentDirection();
 
-                        Vector3 offset = new Vector3(0, 0, 0);
 
-                        if (direction.getCurrentDirection().Equals("down"))
-                        {
-                            offset = new Vector3(0, 0, 0);
-                        }
-                        else if (direction.getCurrentDirection().Equals("left")){
-                            offset = new Vector3(0, 0, (placeableObject.GetxWidth() * cellSize) - cellSize);
-                        }
-                        else if (direction.getCurrentDirection().Equals("up"))
-                        {
+                        Vector3 offset = direction.getOffset(placeableObject, cellSize);
 
-                        }
-                        else if (direction.getCurrentDirection().Equals("down"))
-                        {
-
-                        }
-                        Debug.Log(offset.x);
+                        Debug.Log(offset.ToString());
                         Object ingameObject = Instantiate(placeableObject.GetPrefab(), position + offset, Quaternion.Euler(0, placeableObject.GetDirection(objectDirection), 0));
 
                         //PlaceableObject placedObject = new PlaceableObject(ingameObject);
