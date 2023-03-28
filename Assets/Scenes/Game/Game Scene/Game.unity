@@ -27,7 +27,7 @@ RenderSettings:
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
-  m_HaloStrength: 0.5
+  m_HaloStrength: 0
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
@@ -6108,6 +6108,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Intersection Line Container
       objectReference: {fileID: 0}
+    - target: {fileID: 4004548521145468021, guid: aea73beb60a5c954ba670bf70f453625, type: 3}
+      propertyPath: m_Anchor
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4004548521145468021, guid: aea73beb60a5c954ba670bf70f453625, type: 3}
+      propertyPath: m_Alignment
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6715352146887064813, guid: aea73beb60a5c954ba670bf70f453625, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -932
+      objectReference: {fileID: 0}
+    - target: {fileID: 6715352146887064813, guid: aea73beb60a5c954ba670bf70f453625, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -830
+      objectReference: {fileID: 0}
     - target: {fileID: 8904727711979169488, guid: aea73beb60a5c954ba670bf70f453625, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -8297,6 +8313,14 @@ PrefabInstance:
     - target: {fileID: 2841937407590396321, guid: aea73beb60a5c954ba670bf70f453625, type: 3}
       propertyPath: m_Name
       value: Intersection Line Container
+      objectReference: {fileID: 0}
+    - target: {fileID: 6715352146887064813, guid: aea73beb60a5c954ba670bf70f453625, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -932
+      objectReference: {fileID: 0}
+    - target: {fileID: 6715352146887064813, guid: aea73beb60a5c954ba670bf70f453625, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -830
       objectReference: {fileID: 0}
     - target: {fileID: 8904727711979169488, guid: aea73beb60a5c954ba670bf70f453625, type: 3}
       propertyPath: m_RootOrder

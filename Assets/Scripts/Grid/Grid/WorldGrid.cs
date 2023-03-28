@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.Controls;
+using UnityEngine.UI;
 
 public class WorldGrid : MonoBehaviour
 {
@@ -10,6 +12,7 @@ public class WorldGrid : MonoBehaviour
     private PlaceableObject placeableObject;
     private Direction direction;
     public Canvas placeMenu;
+    public Text governmentMoney;
 
     private Grid grid;
     private GridObject gridObject;
@@ -69,10 +72,42 @@ public class WorldGrid : MonoBehaviour
             {
                 if (placeMenu.isRootCanvas && !ObstructionAtGridPosition(gridPosition, placeableObject))
                 {
-                    string objectDirection = direction.getCurrentDirection();
-                    Object ingameObject = Instantiate(placeableObject.GetPrefab(), position, Quaternion.Euler(0, placeableObject.GetDirection(objectDirection), 0));
-                    //PlaceableObject placedObject = new PlaceableObject(ingameObject);
-                    AddObjectAtGridPosition(placeableObject, gridPosition, objectDirection);
+                    string governmentMoneyString = governmentMoney.text.Replace(",", "");
+                    int governmentMoneyInteger = int.Parse(governmentMoneyString);
+                    int result = governmentMoneyInteger - placeableObject.GetPrice();
+                    
+
+                    if (result > 0) //if player can afford buildingd
+                    {
+                        governmentMoney.text = result.ToString("N0");
+                        string objectDirection = direction.getCurrentDirection();
+
+                        Vector3 offset = new Vector3(0, 0, 0);
+
+                        if (direction.getCurrentDirection().Equals("down"))
+                        {
+                            offset = new Vector3(0, 0, 0);
+                        }
+                        else if (direction.getCurrentDirection().Equals("left")){
+                            offset = new Vector3(0, 0, (placeableObject.GetxWidth() * cellSize) - cellSize);
+                        }
+                        else if (direction.getCurrentDirection().Equals("up"))
+                        {
+
+                        }
+                        else if (direction.getCurrentDirection().Equals("down"))
+                        {
+
+                        }
+                        Debug.Log(offset.x);
+                        Object ingameObject = Instantiate(placeableObject.GetPrefab(), position + offset, Quaternion.Euler(0, placeableObject.GetDirection(objectDirection), 0));
+
+                        //PlaceableObject placedObject = new PlaceableObject(ingameObject);
+                        AddObjectAtGridPosition(placeableObject, gridPosition, objectDirection);
+                    }
+
+
+
 
                 }
                 else
@@ -82,7 +117,7 @@ public class WorldGrid : MonoBehaviour
             }
             else
             {
-                if (ObstructionAtGridPosition(gridPosition, placeableObject))
+                if (IsValidGridPosition(gridPosition) && ObstructionAtGridPosition(gridPosition, placeableObject))
                 {
                     PlaceableObject gridObject = GetObjectAtGridPosition(gridPosition);
 

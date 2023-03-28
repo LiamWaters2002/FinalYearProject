@@ -206,16 +206,22 @@ public class Graph : MonoBehaviour
         yAxisLineRenderer.SetPositions(yAxisPositions);
     }
 
+    /// <summary>
+    /// Shifts a particular curve by [amount] diagonally, but also 
+    /// </summary>
+    /// <param name="demandLineContainer"></param>
+    /// <param name="amount"></param>
     void ShiftDemand(GameObject demandLineContainer, int amount)
     {
         Transform demandCurve = demandLineContainer.transform.Find("Demand Line");
 
         GameObject demandLabel = demandLineContainer.transform.Find("Demand Label").gameObject;
+
         TextMesh demandLabelText = demandLabel.GetComponent<TextMesh>();
 
         int demandLineCount = -1; //We exclude the initial demand line 
 
-        //for each child in graph
+        //for each child in graph, count all demand lines...
         foreach (Transform child in this.transform)
         {
             if (child.CompareTag("Demand"))
@@ -223,7 +229,7 @@ public class Graph : MonoBehaviour
                 demandLineCount++;
             }
         }
-        demandLabelText.text = demandLabelText.text + demandLineCount;
+        demandLabelText.text = "D" + demandLineCount;
 
 
         Transform intersectionContainer = demandCurve.transform.Find("Intersection Line Container");
@@ -232,8 +238,20 @@ public class Graph : MonoBehaviour
         LineRenderer demandLineRenderer = demandCurve.GetComponent<LineRenderer>();
 
         MoveLineDiagonally(demandLineRenderer, demandGradient, amount, amount, "demand", demandLabel);
-        Moveline1Diagonally(intersectionList[0], demandLineRenderer, "demand2");
-        Moveline1Diagonally(intersectionList[1], demandLineRenderer, "demand1");
+        Moveline1Diagonally(intersectionList[0], demandLineRenderer, "demandPrice");
+        Moveline1Diagonally(intersectionList[1], demandLineRenderer, "demandQuantity");
+
+        //Put this into its own method later on...
+        TextMesh[] readLineLabels = intersectionContainer.transform.GetComponentsInChildren<TextMesh>();
+        foreach (TextMesh label in readLineLabels)
+        {
+            //Labels with no numbers for learning
+            if (System.Char.IsLetter(label.text[0]) && label.text.Length == 1)
+            {
+                label.text = label.text + "1";
+            }
+            
+        }
     }
 
     void ShiftSupply(GameObject shiftedSupplyCurve, int amount)
@@ -287,25 +305,31 @@ public class Graph : MonoBehaviour
         Vector3 newCurveStart = line1.GetPosition(0);
         Vector3 NewCurveLineEnd = line1.GetPosition(1);
 
-        if (curveType.Equals("demand1"))
+        TextMesh label = line1.GetComponentInChildren<TextMesh>(); //Get label of line1
+
+        if (curveType.Equals("demandQuantity"))//demand1
         {
             LineRenderer supplyLineRenderer = supplyLine.GetComponent<LineRenderer>();
+
             Vector3 intersectionPoint = GetIntersectionPoint(newCurve, supplyLineRenderer);
             line1.SetPosition(0, GetIntersectionPoint(newCurve, supplyLineRenderer));
             line1End.x = intersectionPoint.x;
             line1.SetPosition(1, line1End);
 
+            label.transform.position = line1End + new Vector3(0, -7 ,0);  //alignment
+
 
         }
-        if (curveType.Equals("demand2"))
+        if (curveType.Equals("demandPrice"))//demand2
         {
             LineRenderer supplyLineRenderer = supplyLine.GetComponent<LineRenderer>();
+
             Vector3 intersectionPoint = GetIntersectionPoint(newCurve, supplyLineRenderer);
             line1.SetPosition(0, GetIntersectionPoint(newCurve, supplyLineRenderer));
             line1End.y = intersectionPoint.y;
             line1.SetPosition(1, line1End);
 
-
+            label.transform.position = line1End + new Vector3(-2, 0, 0);
         }
         if (curveType.Equals("supply1"))
         {
@@ -325,8 +349,6 @@ public class Graph : MonoBehaviour
             //line1Start.y = intersectionPoint.y;
             line1End.y = intersectionPoint.y;
             line1.SetPosition(1, line1End);
-
-
         }
     }
 

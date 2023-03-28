@@ -9,26 +9,70 @@ public class ActionBarController : MonoBehaviour
     public Canvas BuildCanvas;
     public Canvas PlaceCanvas;
     public Canvas LearnCanvas;
+    public Canvas PolicyCanvas;
+    public Canvas MarketsCanvas;
 
     public void Start()
     {
         ActionBarCanvas.enabled = true;
-        BuildCanvas.enabled = false;
-        PlaceCanvas.enabled = false;
-        LearnCanvas.enabled = false;
+        CloseAllBut(null);
     }
 
     public void OnBuildActionBarClick()
     {
-        //ActionBarCanvas.enabled = false;
-        BuildCanvas.enabled = true;
+        CloseAllBut(BuildCanvas);
 
     }
 
     public void OnLearnActionBarClick()
     {
-        //ActionBarCanvas.enabled = false;
-        LearnCanvas.enabled = true;
+        CloseAllBut(LearnCanvas);
 
+    }
+
+    public void OnPolicyActionBarClick()
+    {
+        CloseAllBut(PolicyCanvas);
+
+    }
+
+    public void OnMarketsActionBarClick()
+    {
+        CloseAllBut(MarketsCanvas);
+    }
+
+    public void CloseAll()
+    {
+        CloseAllBut(null);
+    }
+
+    private void CloseAllBut(Canvas canvasToOpen)
+    {
+        BuildCanvas.enabled = false;
+        PlaceCanvas.enabled = false;
+        LearnCanvas.enabled = false;
+        MarketsCanvas.enabled = false;
+        PolicyCanvas.enabled = false;
+
+        if (canvasToOpen == null)
+        {
+
+        }
+        else if (canvasToOpen.Equals(BuildCanvas))
+        {
+            BuildCanvas.enabled = true;
+        }
+        else if (canvasToOpen.Equals(PlaceCanvas))
+        {
+            PlaceCanvas.enabled = true;
+        }
+        else if (canvasToOpen.Equals(LearnCanvas))
+        {
+            LearnCanvas.enabled = true;
+        }
+        else if (canvasToOpen.Equals(MarketsCanvas))
+        {
+            MarketsCanvas.enabled = true;
+        }
     }
 }
