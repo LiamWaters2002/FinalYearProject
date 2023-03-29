@@ -33,15 +33,18 @@ public class GridObject
         }
         else if (direction == "left" || direction == "right")
         {
-            for (int x = 0; x < zDepth; x++)
+            for (int x = 0; x < zDepth; x++) //switch xWidth to zDepth
             {
                 for (int z = 0; z < xWidth; z++)
                 {
 
                     gridObjectArray[gridPosition.getX() + x, gridPosition.getZ() + z] = placeableObject;
+                    //placeableObject.addLocationPosition(gridPosition.getX() + x, gridPosition.getZ() + z);
                 }
             }
         }
+
+        
     }
 
     public void RemoveObject(GridPosition gridPosition)
