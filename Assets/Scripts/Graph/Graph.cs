@@ -42,8 +42,16 @@ public class Graph : MonoBehaviour
 
     GameObject shiftedDemandCurve;
     GameObject shiftedSupplyCurve;
-    public bool demandShift = false;
-    public bool supplyShift = false;
+
+    public bool demandShifted = false;
+    public bool supplyShifted = false;
+    public bool demandShifting = false;
+    public bool supplyShifting = false;
+
+    public float timer = 0;
+    public float duration = 0.01f;
+
+    public string shiftType = "";
 
     void Start()
     {
@@ -111,27 +119,151 @@ public class Graph : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            if (!demandShift)
+            if (!demandShifted)
             {
                 shiftedDemandCurve = Instantiate(demandLineContainer);
-                shiftedDemandCurve.transform.parent = this.transform;
-                demandShift = true;
+                shiftedDemandCurve.transform.parent = this.transform; //Make curve parent of the original
+                demandShifted = true;
+                demandShifting = true;
             }
-            ShiftDemand(shiftedDemandCurve, 30); //negative - left, positive - right
+            demandShifted = true;
+            demandShifting = true;
         }
 
         if (Input.GetKeyDown(KeyCode.L))
         {
-            if (!supplyShift)
+            if (!supplyShifted && !supplyShifting)
             {
                 shiftedSupplyCurve = Instantiate(supplyLineContainer);
-                supplyShift = true;
+                shiftedSupplyCurve.transform.parent = this.transform;
             }
-            ShiftSupply(shiftedSupplyCurve, -30); //negative - left, positive - right
+            supplyShifted = true;
+            supplyShifting = true;
+        }
+
+        //if (!shiftType.Equals(""))
+        //{
+        //    if (!supplyShifted && !supplyShifting)
+        //    {
+        //        shiftedSupplyCurve = Instantiate(supplyLineContainer);
+        //        shiftedSupplyCurve.transform.parent = this.transform;
+        //    }
+        //    supplyShifted = true;
+        //    supplyShifting = true;
+        //}
+
+
+
+        if (supplyShifting || shiftType.Equals("RightwardShiftInSupply"))
+        {
+            timer += Time.deltaTime * 10;
+            if(timer < duration)
+            {
+                ShiftSupply(shiftedSupplyCurve, 1); //negative - left, positive - right
+            }
+            else
+            {
+                timer = 0;
+                supplyShifting = false;
+                shiftType = "";
+            }
+        }
+        else if (demandShifting || shiftType.Equals("RightwardShiftInDemand"))
+        {
+            timer += Time.deltaTime * 10;
+            if (timer < duration)
+            {
+                ShiftDemand(shiftedDemandCurve, 1); //negative - left, positive - right
+            }
+            else
+            {
+                timer = 0;
+                demandShifting = false;
+                shiftType = "";
+            }
+        }
+        else if (supplyShifting || shiftType.Equals("LeftwardShiftInSupply"))
+        {
+            timer += Time.deltaTime * 10;
+            if (timer < duration)
+            {
+                ShiftSupply(shiftedSupplyCurve, -1); //negative - left, positive - right
+            }
+            else
+            {
+                timer = 0;
+                supplyShifting = false;
+                shiftType = "";
+            }
+        }
+        else if (demandShifting || shiftType.Equals("LeftwardShiftInDemand"))
+        {
+            timer += Time.deltaTime * 10;
+            if (timer < duration)
+            {
+                ShiftDemand(shiftedDemandCurve, -1); //negative - left, positive - right
+            }
+            else
+            {
+                timer = 0;
+                demandShifting = false;
+                shiftType = "";
+            }
         }
 
         //Createline1s(horizontalOffset, verticalOffset);
     }
+
+    public void RightwardShiftInSupply()
+    {
+        shiftType = "RightwardShiftInSupply";
+        if (!supplyShifted && !supplyShifting)
+        {
+            shiftedSupplyCurve = Instantiate(supplyLineContainer);
+            shiftedSupplyCurve.transform.parent = this.transform;
+        }
+        supplyShifted = true;
+    }
+
+    public void LeftwardShiftInSupply()
+    {
+        shiftType = "LeftwardShiftInSupply";
+        if (!supplyShifted && !supplyShifting)
+        {
+            shiftedSupplyCurve = Instantiate(supplyLineContainer);
+            shiftedSupplyCurve.transform.parent = this.transform;
+        }
+        supplyShifted = true;
+    }
+
+    public void RightwardShiftInDemand()
+    {
+        shiftType = "RightwardShiftInDemand";
+
+        if (!demandShifted)
+        {
+            shiftedDemandCurve = Instantiate(demandLineContainer);
+            shiftedDemandCurve.transform.parent = this.transform; //Make curve parent of the original
+            demandShifted = true;
+            demandShifting = true;
+        }
+        demandShifted = true;
+    }
+
+    public void LeftwardShiftInDemand()
+    {
+        shiftType = "LeftwardShiftInDemand";
+
+        if (!demandShifted)
+        {
+            shiftedDemandCurve = Instantiate(demandLineContainer);
+            shiftedDemandCurve.transform.parent = this.transform; //Make curve parent of the original
+            demandShifted = true;
+            demandShifting = true;
+        }
+        demandShifted = true;
+    }
+
 
     public void UpdateCurves(float horizontalOffset, float verticalOffset, float supplyGradient, float demandGradient)
     {
@@ -207,7 +339,7 @@ public class Graph : MonoBehaviour
     }
 
     /// <summary>
-    /// Shifts a particular curve by [amount] diagonally, but also 
+    /// Shifts a particular curve, and its labels
     /// </summary>
     /// <param name="demandLineContainer"></param>
     /// <param name="amount"></param>
@@ -246,24 +378,70 @@ public class Graph : MonoBehaviour
         foreach (TextMesh label in readLineLabels)
         {
             //Labels with no numbers for learning
-            if (System.Char.IsLetter(label.text[0]) && label.text.Length == 1)
+            if (char.IsLetter(label.text[0]) && label.text.Length == 1)
             {
-                label.text = label.text + "1";
+                int supplyLineCount = -1;
+                foreach (Transform child in this.transform)
+                {
+                    if (child.CompareTag("Supply"))
+                    {
+                        supplyLineCount++;
+                    }
+                }
+                label.text = label.text + (demandLineCount + supplyLineCount).ToString();
             }
             
         }
     }
 
-    void ShiftSupply(GameObject shiftedSupplyCurve, int amount)
+    void ShiftSupply(GameObject supplyLineContainer, int amount)
     {
-        Transform intersectionContainer = shiftedSupplyCurve.transform.Find("Intersection Line Container");
+        Transform supplyCurve = supplyLineContainer.transform.Find("Supply Line");
+
+        GameObject supplyLabel = supplyLineContainer.transform.Find("Supply Label").gameObject;
+
+        TextMesh supplyLabelText = supplyLabel.GetComponent<TextMesh>();
+
+        int supplyLineCount = -1;
+
+        //for each child in graph, count all supply lines...
+        foreach (Transform child in this.transform)
+        {
+            if (child.CompareTag("Supply"))
+            {
+                supplyLineCount++;
+            }
+        }
+        supplyLabelText.text = "S" + supplyLineCount;
+
+        Transform intersectionContainer = supplyCurve.transform.Find("Intersection Line Container");
         LineRenderer[] intersectionList = intersectionContainer.GetComponentsInChildren<LineRenderer>();
 
-        LineRenderer supplyCurve = shiftedSupplyCurve.GetComponent<LineRenderer>();
+        LineRenderer supplyLineRenderer = supplyCurve.GetComponent<LineRenderer>();
 
-        MoveLineDiagonally(supplyCurve, supplyGradient, amount, amount, "supply", supplyLabel);
-        Moveline1Diagonally(intersectionList[0], supplyCurve, "supply2");
-        Moveline1Diagonally(intersectionList[1], supplyCurve, "supply1");
+        MoveLineDiagonally(supplyLineRenderer, supplyGradient, amount, amount, "supply", supplyLabel);
+        Moveline1Diagonally(intersectionList[0], supplyLineRenderer, "supplyPrice");
+        Moveline1Diagonally(intersectionList[1], supplyLineRenderer, "supplyQuantity");
+
+        //Put this into its own method later on...
+        TextMesh[] readLineLabels = intersectionContainer.transform.GetComponentsInChildren<TextMesh>();
+        foreach (TextMesh label in readLineLabels)
+        {
+            //Labels with no numbers for learning
+            if (char.IsLetter(label.text[0]) && label.text.Length == 1)
+            {
+                int demandLineCount = -1;
+                foreach (Transform child in this.transform)
+                {
+                    if (child.CompareTag("Demand"))
+                    {
+                        demandLineCount++;
+                    }
+                }
+                label.text = label.text + (demandLineCount + supplyLineCount).ToString();
+            }
+
+        }
     }
 
     public void MoveLineDiagonally(LineRenderer lineRenderer, float gradient, float moveAmountX, float moveAmountY, string curveType, GameObject label)
@@ -331,7 +509,7 @@ public class Graph : MonoBehaviour
 
             label.transform.position = line1End + new Vector3(-2, 0, 0);
         }
-        if (curveType.Equals("supply1"))
+        if (curveType.Equals("supplyQuantity"))
         {
             LineRenderer demandLineRenderer = demandLine.GetComponent<LineRenderer>();
             Vector3 intersectionPoint = GetIntersectionPoint(newCurve, demandLineRenderer);
@@ -339,9 +517,10 @@ public class Graph : MonoBehaviour
             line1End.x = intersectionPoint.x;
             line1.SetPosition(1, line1End);
 
+            label.transform.position = line1End + new Vector3(0, -7, 0);  //alignment
 
         }
-        if (curveType.Equals("supply2"))
+        if (curveType.Equals("supplyPrice"))
         {
             LineRenderer demandLineRenderer = demandLine.GetComponent<LineRenderer>();
             Vector3 intersectionPoint = GetIntersectionPoint(newCurve, demandLineRenderer);
@@ -349,6 +528,7 @@ public class Graph : MonoBehaviour
             //line1Start.y = intersectionPoint.y;
             line1End.y = intersectionPoint.y;
             line1.SetPosition(1, line1End);
+            label.transform.position = line1End + new Vector3(-2, 0, 0);
         }
     }
 
