@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
@@ -20,7 +21,7 @@ public class Graph : MonoBehaviour
     public float demandIntercept = 50f; //Check unity inspector
     public float demandGradient = -1f; //Check unity inspector
 
-    public float horizontalOffset = 30f; //Moves whole graph left/right
+    public float horizontalOffset = 0f; //Moves whole graph left/right
     public float verticalOffset = 30f; //Moves whole graph up/down
     public float axisOffset = 30f; //Moves just the axis
 
@@ -34,11 +35,11 @@ public class Graph : MonoBehaviour
     public GameObject yAxis;
     private GameObject supplyLabel;
     private GameObject demandLabel;
-    public LineRenderer[] horizontalReadLine;
-    public LineRenderer[] verticalReadLine;
+    public LineRenderer[] horizontalGridLine;
+    public LineRenderer[] verticalGridLine;
 
-    private Vector3[] horizontalReadLinePositions;
-    private Vector3[] verticalReadLinePositions;
+    private Vector3[] horizontalGridLinePositions;
+    private Vector3[] verticalGridLinePositions;
 
     GameObject shiftedDemandCurve;
     GameObject shiftedSupplyCurve;
@@ -58,64 +59,43 @@ public class Graph : MonoBehaviour
 
         supplyLine = supplyLineContainer.transform.Find("Supply Line").gameObject;
         demandLine = demandLineContainer.transform.Find("Demand Line").gameObject;
-        //Set supply
+
+        //Initialise supply
         LineRenderer supplyLineRenderer = supplyLine.GetComponent<LineRenderer>();
         supplyLineRenderer.startWidth = curveThickness;
         supplyLineRenderer.endWidth = curveThickness;
-        supplyLineRenderer.positionCount = 2;
-        Vector3[] supplyPositions = new Vector3[2];
-        supplyPositions[0] = new Vector3(minX, supplyIntercept, 0f); // first point
-        supplyPositions[1] = new Vector3(maxX, maxY * supplyGradient + supplyIntercept, 0f); // second point
-        supplyLineRenderer.SetPositions(supplyPositions);
 
-        //Set demand
+        //Initalise demand
         LineRenderer demandLineRenderer = demandLine.GetComponent<LineRenderer>();
         demandLineRenderer.startWidth = curveThickness;
         demandLineRenderer.endWidth = curveThickness;
-        demandLineRenderer.positionCount = 2;
-        Vector3[] demandPositions = new Vector3[2];
-        demandPositions[0] = new Vector3(minX, demandIntercept, 0f);
-        demandPositions[1] = new Vector3(maxX, maxY * demandGradient + demandIntercept, 0f); // second point
-        demandLineRenderer.SetPositions(demandPositions);
 
         //Set X-Axis line
         LineRenderer xAxisLineRenderer = xAxis.GetComponent<LineRenderer>();
-        xAxisLineRenderer.positionCount = 2;
-        Vector3[] xAxisPositions = new Vector3[2];
-        xAxisPositions[0] = new Vector3(minX, 0f, 0f);
-        xAxisPositions[1] = new Vector3(maxX, 0f, 0f);
-        xAxisLineRenderer.SetPositions(xAxisPositions);
-        xAxisLineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-        xAxisLineRenderer.startWidth = 1f;
-        xAxisLineRenderer.endWidth = 1f;
+        xAxisLineRenderer.startWidth = curveThickness;
+        xAxisLineRenderer.endWidth = curveThickness;
 
         //Set Y-Axis line
         LineRenderer yAxisLineRenderer = yAxis.GetComponent<LineRenderer>();
-        yAxisLineRenderer.positionCount = 2;
-        Vector3[] yAxisPositions = new Vector3[2];
-        yAxisPositions[0] = new Vector3(0f, minY, 0f);
-        yAxisPositions[1] = new Vector3(0f, maxY, 0f);
-        yAxisLineRenderer.SetPositions(yAxisPositions);
-        yAxisLineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-        yAxisLineRenderer.startWidth = 1f;
-        yAxisLineRenderer.endWidth = 1f;
+        yAxisLineRenderer.startWidth = curveThickness;
+        yAxisLineRenderer.endWidth = curveThickness;
+
 
         supplyLabel = GameObject.Find("Supply Label");
         demandLabel = GameObject.Find("Demand Label");
 
-        //Only need to get data for one either supply/demand's readlines as they start off in same position.
-        verticalReadLinePositions = new Vector3[verticalReadLine[0].positionCount];
-        verticalReadLine[0].GetPositions(verticalReadLinePositions);
-        horizontalReadLinePositions = new Vector3[horizontalReadLine[0].positionCount];
-        horizontalReadLine[0].GetPositions(horizontalReadLinePositions);
+        //Only need to get data for one either supply/demand's GridLines as they start off in same position.
+        verticalGridLinePositions = new Vector3[verticalGridLine[0].positionCount];
+        verticalGridLine[0].GetPositions(verticalGridLinePositions);
+
+        horizontalGridLinePositions = new Vector3[horizontalGridLine[0].positionCount];
+        horizontalGridLine[0].GetPositions(horizontalGridLinePositions);
 
     }
 
     public void Update()
     {
         UpdateCurves(horizontalOffset, verticalOffset, supplyGradient, demandGradient);
-        UpdateXAxis(scaleXAxis, horizontalOffset, verticalOffset);
-        UpdateYAxis(scaleYAxis, horizontalOffset, verticalOffset);
 
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -154,7 +134,7 @@ public class Graph : MonoBehaviour
 
 
 
-        if (supplyShifting || shiftType.Equals("RightwardShiftInSupply"))
+        if (shiftType.Equals("RightwardShiftInSupply"))
         {
             timer += Time.deltaTime * 10;
             if(timer < duration)
@@ -168,7 +148,7 @@ public class Graph : MonoBehaviour
                 shiftType = "";
             }
         }
-        else if (demandShifting || shiftType.Equals("RightwardShiftInDemand"))
+        else if (shiftType.Equals("RightwardShiftInDemand"))
         {
             timer += Time.deltaTime * 10;
             if (timer < duration)
@@ -221,6 +201,8 @@ public class Graph : MonoBehaviour
         {
             shiftedSupplyCurve = Instantiate(supplyLineContainer);
             shiftedSupplyCurve.transform.parent = this.transform;
+            supplyShifted = true;
+            supplyShifting = true;
         }
         supplyShifted = true;
     }
@@ -232,6 +214,8 @@ public class Graph : MonoBehaviour
         {
             shiftedSupplyCurve = Instantiate(supplyLineContainer);
             shiftedSupplyCurve.transform.parent = this.transform;
+            supplyShifted = true;
+            supplyShifting = true;
         }
         supplyShifted = true;
     }
@@ -267,75 +251,39 @@ public class Graph : MonoBehaviour
 
     public void UpdateCurves(float horizontalOffset, float verticalOffset, float supplyGradient, float demandGradient)
     {
-        Vector3 center = new Vector3((maxX + minX) / 2f, (maxY + minY) / 2f, 0f);
+
+        //Center of the curve
+        Vector3 centerOfGraph = demandLine.transform.position;
+
         Quaternion rotation = Quaternion.Euler(0f, 0f, 0f);//centre rotation
 
         Vector3[] supplyPositions = new Vector3[2];
-        supplyPositions[0] = new Vector3(-center.x + horizontalOffset, center.y * supplyGradient + verticalOffset, 0f); // first point
-        supplyPositions[1] = new Vector3(center.x + horizontalOffset, -center.y * supplyGradient + verticalOffset, 0f); // second point
-        supplyPositions[0] = rotation * supplyPositions[0] + center;
-        supplyPositions[1] = rotation * supplyPositions[1] + center;
+        Vector3 localPosition = new Vector3(centerOfGraph.x + horizontalOffset, centerOfGraph.y + verticalOffset, 0f);
 
-        supplyLine.GetComponent<LineRenderer>().SetPositions(supplyPositions);
+        float sangle = Mathf.Atan(supplyGradient) * Mathf.Rad2Deg;
+        Quaternion stargetRotation = Quaternion.Euler(0, 0, sangle);
 
-        supplyLabel.transform.position = supplyLine.GetComponent<LineRenderer>().GetPosition(1);
+        Vector3 spivot = supplyLine.transform.position + new Vector3(horizontalOffset, verticalOffset, 0f);
+
+        supplyLine.transform.RotateAround(spivot, Vector3.forward, sangle - supplyLine.transform.rotation.eulerAngles.z);
+        supplyLine.transform.rotation = stargetRotation;
 
 
         Vector3[] demandPositions = new Vector3[2];
-        demandPositions[0] = new Vector3(-center.x + horizontalOffset, center.y * demandGradient + verticalOffset, 0f); // first point
-        demandPositions[1] = new Vector3(center.x + horizontalOffset, -center.y * demandGradient + verticalOffset, 0f); // second point
-        demandPositions[0] = rotation * demandPositions[0] + center;
-        demandPositions[1] = rotation * demandPositions[1] + center;
+        Vector3 localPosition2 = new Vector3(-centerOfGraph.x + horizontalOffset, centerOfGraph.y + verticalOffset, 0f);
 
-        demandLine.GetComponent<LineRenderer>().SetPositions(demandPositions);
 
-        //demandLabel = demandLine.transform.Find("Demand Label");
+        float dangle = Mathf.Atan(demandGradient) * Mathf.Rad2Deg;
+        Quaternion dtargetRotation = Quaternion.Euler(0, 0, dangle);
+        if (supplyGradient < 0)
+        {
+            sangle += 180f;
+        }
 
-        Vector3 supplyLabelPosition = supplyPositions[1] + new Vector3(5, 10, 0);
-        Vector3 demandLabelPosition = demandPositions[1] + new Vector3(5, 2, 0);
+        Vector3 dpivot = demandLine.transform.position + new Vector3(horizontalOffset, verticalOffset, 0f);
 
-        demandLabel.transform.position = demandLabelPosition;
-        supplyLabel.transform.position = supplyLabelPosition;
-
-        Vector3[] updatedHorizontalReadLinePositions = new Vector3[horizontalReadLine[0].positionCount];
-        Vector3[] updatedVerticalReadLinePositions = new Vector3[verticalReadLine[0].positionCount];
-
-        // Update the positions using the horizontal and vertical offsets for the read lines...
-        updatedHorizontalReadLinePositions[0] = new Vector3(horizontalReadLinePositions[0].x + horizontalOffset, horizontalReadLinePositions[0].y + verticalOffset, 0f);
-        updatedHorizontalReadLinePositions[1] = new Vector3(horizontalReadLinePositions[1].x + horizontalOffset, horizontalReadLinePositions[1].y + verticalOffset, 0f);
-
-        updatedVerticalReadLinePositions[0] = new Vector3(verticalReadLinePositions[0].x + horizontalOffset, verticalReadLinePositions[0].y + verticalOffset, 0f);
-        updatedVerticalReadLinePositions[1] = new Vector3(verticalReadLinePositions[1].x + horizontalOffset, verticalReadLinePositions[1].y + verticalOffset, 0f);
-
-        // Set the updated positions back to the line renderer
-        horizontalReadLine[0].SetPositions(updatedHorizontalReadLinePositions);
-        verticalReadLine[0].SetPositions(updatedVerticalReadLinePositions);
-        horizontalReadLine[1].SetPositions(updatedHorizontalReadLinePositions);
-        verticalReadLine[1].SetPositions(updatedVerticalReadLinePositions);
-    }
-
-    void UpdateXAxis(float scaleXAxis, float horizontalOffset, float verticalOffset)
-    {
-        horizontalOffset = horizontalOffset - axisOffset;
-        verticalOffset = verticalOffset - axisOffset;
-
-        LineRenderer xAxisLineRenderer = xAxis.GetComponent<LineRenderer>();
-        Vector3[] xAxisPositions = new Vector3[2];
-        xAxisPositions[0] = new Vector3(minX * scaleXAxis + horizontalOffset, verticalOffset, 0f);
-        xAxisPositions[1] = new Vector3(maxX * scaleXAxis + horizontalOffset, verticalOffset, 0f);
-        xAxisLineRenderer.SetPositions(xAxisPositions);
-    }
-
-    void UpdateYAxis(float scaleYAxis, float horizontalOffset, float verticalOffset)
-    {
-        horizontalOffset = horizontalOffset - axisOffset;
-        verticalOffset = verticalOffset - axisOffset;
-
-        LineRenderer yAxisLineRenderer = yAxis.GetComponent<LineRenderer>();
-        Vector3[] yAxisPositions = new Vector3[2];
-        yAxisPositions[0] = new Vector3(horizontalOffset, minY * scaleYAxis + verticalOffset, 0f);
-        yAxisPositions[1] = new Vector3(horizontalOffset, maxY * scaleYAxis + verticalOffset, 0f);
-        yAxisLineRenderer.SetPositions(yAxisPositions);
+        demandLine.transform.RotateAround(dpivot, Vector3.forward, dangle - demandLine.transform.rotation.eulerAngles.z);
+        demandLine.transform.rotation = dtargetRotation;
     }
 
     /// <summary>
@@ -364,18 +312,18 @@ public class Graph : MonoBehaviour
         demandLabelText.text = "D" + demandLineCount;
 
 
-        Transform intersectionContainer = demandCurve.transform.Find("Intersection Line Container");
+        Transform intersectionContainer = demandLineContainer.transform.Find("Intersection Line Container");
         LineRenderer[] intersectionList = intersectionContainer.GetComponentsInChildren<LineRenderer>();
 
         LineRenderer demandLineRenderer = demandCurve.GetComponent<LineRenderer>();
 
         MoveLineDiagonally(demandLineRenderer, demandGradient, amount, amount, "demand", demandLabel);
-        Moveline1Diagonally(intersectionList[0], demandLineRenderer, "demandPrice");
-        Moveline1Diagonally(intersectionList[1], demandLineRenderer, "demandQuantity");
+        //Moveline1Diagonally(intersectionList[0], demandLineRenderer, "demandPrice");
+        //Moveline1Diagonally(intersectionList[1], demandLineRenderer, "demandQuantity");
 
         //Put this into its own method later on...
-        TextMesh[] readLineLabels = intersectionContainer.transform.GetComponentsInChildren<TextMesh>();
-        foreach (TextMesh label in readLineLabels)
+        TextMesh[] GridLineLabels = intersectionContainer.transform.GetComponentsInChildren<TextMesh>();
+        foreach (TextMesh label in GridLineLabels)
         {
             //Labels with no numbers for learning
             if (char.IsLetter(label.text[0]) && label.text.Length == 1)
@@ -414,9 +362,8 @@ public class Graph : MonoBehaviour
         }
         supplyLabelText.text = "S" + supplyLineCount;
 
-        Transform intersectionContainer = supplyCurve.transform.Find("Intersection Line Container");
+        Transform intersectionContainer = supplyLineContainer.transform.Find("Intersection Line Container");
         LineRenderer[] intersectionList = intersectionContainer.GetComponentsInChildren<LineRenderer>();
-
         LineRenderer supplyLineRenderer = supplyCurve.GetComponent<LineRenderer>();
 
         MoveLineDiagonally(supplyLineRenderer, supplyGradient, amount, amount, "supply", supplyLabel);
@@ -424,8 +371,8 @@ public class Graph : MonoBehaviour
         Moveline1Diagonally(intersectionList[1], supplyLineRenderer, "supplyQuantity");
 
         //Put this into its own method later on...
-        TextMesh[] readLineLabels = intersectionContainer.transform.GetComponentsInChildren<TextMesh>();
-        foreach (TextMesh label in readLineLabels)
+        TextMesh[] GridLineLabels = intersectionContainer.transform.GetComponentsInChildren<TextMesh>();
+        foreach (TextMesh label in GridLineLabels)
         {
             //Labels with no numbers for learning
             if (char.IsLetter(label.text[0]) && label.text.Length == 1)
@@ -444,35 +391,53 @@ public class Graph : MonoBehaviour
         }
     }
 
+    public void ShiftCurve(GameObject curve, float moveAmount)
+    {
+        Vector3 position = curve.transform.position; //move the y axis to shift diagonally.
+        if (curve.transform.parent.tag.Equals("Supply"))
+        {
+            position.y += moveAmount;
+        }
+        else
+        {
+            position.y -= moveAmount;
+        }
+        
+        position.x += moveAmount;
+        curve.transform.position = position;
+    }
+
+
     public void MoveLineDiagonally(LineRenderer lineRenderer, float gradient, float moveAmountX, float moveAmountY, string curveType, GameObject label)
     {
-        Vector3 startPoint = lineRenderer.GetPosition(0);
-        Vector3 endPoint = lineRenderer.GetPosition(1);
+        ShiftCurve(lineRenderer.gameObject, moveAmountX);
+        //Vector3 startPoint = lineRenderer.GetPosition(0);
+        //Vector3 endPoint = lineRenderer.GetPosition(1);
 
-        // Calculate the x and y distances to move the line based on the given gradient
-        float distanceX = moveAmountX / Mathf.Sqrt(1 + gradient * gradient);
-        float distanceY = moveAmountY / Mathf.Sqrt(1 + gradient * gradient);
+        //// Calculate the x and y distances to move the line based on the given gradient
+        //float distanceX = moveAmountX / Mathf.Sqrt(1 + gradient * gradient);
+        //float distanceY = moveAmountY / Mathf.Sqrt(1 + gradient * gradient);
 
-        Vector3 newStartPoint = new Vector3(0,0,0);
-        Vector3 newEndPoint = new Vector3(0, 0, 0); ;
-        // Calculate the new positions of the line's starting and ending points based on the calculated distances
-        if (curveType.Equals("demand"))
-        {
-            newStartPoint = new Vector3(startPoint.x + distanceX, startPoint.y + distanceY, startPoint.z);
-            newEndPoint = new Vector3(endPoint.x + distanceX, endPoint.y + distanceY, endPoint.z);
-        }
-        else if (curveType.Equals("supply"))
-        {
-            newStartPoint = new Vector3(startPoint.x + distanceX, startPoint.y - distanceY, startPoint.z);
-            newEndPoint = new Vector3(endPoint.x + distanceX, endPoint.y - distanceY, endPoint.z);
-        }
+        //Vector3 newStartPoint = new Vector3(0,0,0);
+        //Vector3 newEndPoint = new Vector3(0, 0, 0); ;
+        //// Calculate the new positions of the line's starting and ending points based on the calculated distances
+        //if (curveType.Equals("demand"))
+        //{
+        //    newStartPoint = new Vector3(startPoint.x + distanceX, startPoint.y + distanceY, startPoint.z);
+        //    newEndPoint = new Vector3(endPoint.x + distanceX, endPoint.y + distanceY, endPoint.z);
+        //}
+        //else if (curveType.Equals("supply"))
+        //{
+        //    newStartPoint = new Vector3(startPoint.x + distanceX, startPoint.y - distanceY, startPoint.z);
+        //    newEndPoint = new Vector3(endPoint.x + distanceX, endPoint.y - distanceY, endPoint.z);
+        //}
 
 
-        // Update the positions of the line's starting and ending points
-        lineRenderer.SetPosition(0, newStartPoint);
-        lineRenderer.SetPosition(1, newEndPoint);
+        //// Update the positions of the line's starting and ending points
+        //lineRenderer.SetPosition(0, newStartPoint);
+        //lineRenderer.SetPosition(1, newEndPoint);
 
-        label.transform.position = newEndPoint;
+        //label.transform.position = newEndPoint;
     }
 
     public void Moveline1Diagonally(LineRenderer line1, LineRenderer newCurve, string curveType)
