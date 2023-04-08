@@ -396,11 +396,11 @@ public class Graph : MonoBehaviour
         Vector3 position = curve.transform.position; //move the y axis to shift diagonally.
         if (curve.transform.parent.tag.Equals("Supply"))
         {
-            position.y += moveAmount;
+            position.y -= moveAmount;
         }
         else
         {
-            position.y -= moveAmount;
+            position.y += moveAmount;
         }
         
         position.x += moveAmount;
