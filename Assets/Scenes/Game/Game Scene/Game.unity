@@ -3256,6 +3256,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Demand Line Container
       objectReference: {fileID: 0}
+    - target: {fileID: 6235280269879618661, guid: 624245dec3717ae499e9dd9dfc0e068b, type: 3}
+      propertyPath: m_TagString
+      value: Demand
+      objectReference: {fileID: 0}
     - target: {fileID: 6235280271452492802, guid: 624245dec3717ae499e9dd9dfc0e068b, type: 3}
       propertyPath: m_FontSize
       value: 150
@@ -9807,6 +9811,10 @@ PrefabInstance:
     - target: {fileID: 3474107290695440606, guid: e5b98054bae02d141b0827ff5eedc6cf, type: 3}
       propertyPath: m_Name
       value: Supply Line Container
+      objectReference: {fileID: 0}
+    - target: {fileID: 3474107290695440606, guid: e5b98054bae02d141b0827ff5eedc6cf, type: 3}
+      propertyPath: m_TagString
+      value: Supply
       objectReference: {fileID: 0}
     - target: {fileID: 3474107292075864026, guid: e5b98054bae02d141b0827ff5eedc6cf, type: 3}
       propertyPath: m_FontSize
