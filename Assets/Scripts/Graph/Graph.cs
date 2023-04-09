@@ -120,12 +120,12 @@ public class Graph : MonoBehaviour
             shiftType = "";
             ShiftDemand(shiftedDemandCurve, 10); //negative - left, positive - right
         }
-        else if (supplyShifting || shiftType.Equals("LeftwardShiftInSupply"))
+        else if (shiftType.Equals("LeftwardShiftInSupply"))
         {
             shiftType = "";
             ShiftSupply(shiftedSupplyCurve, -10); //negative - left, positive - right
         }
-        else if (demandShifting || shiftType.Equals("LeftwardShiftInDemand"))
+        else if (shiftType.Equals("LeftwardShiftInDemand"))
         {
             shiftType = "";
             ShiftDemand(shiftedDemandCurve, -10); //negative - left, positive - right
@@ -287,6 +287,7 @@ public class Graph : MonoBehaviour
 
     void ShiftSupply(GameObject supplyLineContainer, int amount)
     {
+        Debug.Log("This was executed");
         Transform supplyCurve = supplyLineContainer.transform.Find("Supply Line");
 
         GameObject supplyLabel = supplyLineContainer.transform.Find("Supply Label").gameObject;
