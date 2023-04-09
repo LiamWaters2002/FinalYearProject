@@ -6,28 +6,34 @@ EditorUserSettings:
   serializedVersion: 4
   m_ConfigSettings:
     RecentlyUsedSceneGuid-0:
-      value: 5a5757560101590a5d0c0e24427b5d44434e4c7a7b7a23677f2b4565b7b5353a
-      flags: 0
-    RecentlyUsedSceneGuid-1:
       value: 5057520756560f5a5c5e5b2616730c444115482b2f797761297a4a60b2b9606e
       flags: 0
-    RecentlyUsedSceneGuid-2:
+    RecentlyUsedSceneGuid-1:
       value: 020206025c575d0c5b0b0e2345705e44154f407c7a717f627d7f4d36e6b4676e
       flags: 0
-    RecentlyUsedSceneGuid-3:
+    RecentlyUsedSceneGuid-2:
       value: 5b0152525c515f0c555a557642220c44174f1e7d7e2d726479711c61b3b36669
       flags: 0
-    RecentlyUsedSceneGuid-4:
+    RecentlyUsedSceneGuid-3:
       value: 500751515d050b0f58080d7343770744444f1e7e792d7568282f4d67b0b0326a
       flags: 0
-    RecentlyUsedSceneGuid-5:
+    RecentlyUsedSceneGuid-4:
       value: 065456535c5150080e575f7042710c444216197a7c2c256778794967bae46c3d
       flags: 0
-    RecentlyUsedSceneGuid-6:
+    RecentlyUsedSceneGuid-5:
       value: 5653565306020c0d550b0f2347215d44434e4f2b7d297f667c7b4937bae3653d
       flags: 0
-    RecentlyUsedSceneGuid-7:
+    RecentlyUsedSceneGuid-6:
       value: 5557520304565a0b0f56582614730f444e4f1a287b7123667e2f4562e4b56760
+      flags: 0
+    RecentlyUsedSceneGuid-7:
+      value: 5b08500552535c0b580c5d7447750a44464e1b737a2c25317f2d4c35b2b1653b
+      flags: 0
+    RecentlyUsedSceneGuid-8:
+      value: 5a5757560101590a5d0c0e24427b5d44434e4c7a7b7a23677f2b4565b7b5353a
+      flags: 0
+    RecentlyUsedSceneGuid-9:
+      value: 0206040401510b0d0f5d54764674094414161d2c7f7b25327d7b4d35b2b5376e
       flags: 0
     RecentlyUsedScenePath-0:
       value: 22424703114646680e0b0227036c6c111b07142f1f2b233e2867083debf42d

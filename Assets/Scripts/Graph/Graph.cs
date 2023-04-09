@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
@@ -53,6 +54,7 @@ public class Graph : MonoBehaviour
     public float duration = 0.01f;
 
     public string shiftType = "";
+    Coroutine coroutine;
 
     void Start()
     {
@@ -96,103 +98,40 @@ public class Graph : MonoBehaviour
     public void Update()
     {
         UpdateCurves(horizontalOffset, verticalOffset, supplyGradient, demandGradient);
+        UpdateLabels(demandLine.GetComponent<LineRenderer>(), demandLabel.GetComponent<TextMesh>(), 0);
+        UpdateLabels(supplyLine.GetComponent<LineRenderer>(), supplyLabel.GetComponent<TextMesh>(), 0);
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (shiftType != "")
         {
-            if (!demandShifted)
-            {
-                shiftedDemandCurve = Instantiate(demandLineContainer);
-                shiftedDemandCurve.transform.parent = this.transform; //Make curve parent of the original
-                demandShifted = true;
-                demandShifting = true;
-            }
-            demandShifted = true;
-            demandShifting = true;
+            CheckShiftType();
         }
+    }
 
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            if (!supplyShifted && !supplyShifting)
-            {
-                shiftedSupplyCurve = Instantiate(supplyLineContainer);
-                shiftedSupplyCurve.transform.parent = this.transform;
-            }
-            supplyShifted = true;
-            supplyShifting = true;
-        }
-
-        //if (!shiftType.Equals(""))
-        //{
-        //    if (!supplyShifted && !supplyShifting)
-        //    {
-        //        shiftedSupplyCurve = Instantiate(supplyLineContainer);
-        //        shiftedSupplyCurve.transform.parent = this.transform;
-        //    }
-        //    supplyShifted = true;
-        //    supplyShifting = true;
-        //}
-
-
-
+    public void CheckShiftType()
+    {
         if (shiftType.Equals("RightwardShiftInSupply"))
         {
-            timer += Time.deltaTime * 10;
-            if(timer < duration)
-            {
-                ShiftSupply(shiftedSupplyCurve, 1); //negative - left, positive - right
-            }
-            else
-            {
-                timer = 0;
-                supplyShifting = false;
-                shiftType = "";
-            }
+            shiftType = "";
+            ShiftSupply(shiftedSupplyCurve, 10); //negative - left, positive - right
+            
         }
         else if (shiftType.Equals("RightwardShiftInDemand"))
         {
-            timer += Time.deltaTime * 10;
-            if (timer < duration)
-            {
-                ShiftDemand(shiftedDemandCurve, 1); //negative - left, positive - right
-            }
-            else
-            {
-                timer = 0;
-                demandShifting = false;
-                shiftType = "";
-            }
+            shiftType = "";
+            ShiftDemand(shiftedDemandCurve, 10); //negative - left, positive - right
         }
         else if (supplyShifting || shiftType.Equals("LeftwardShiftInSupply"))
         {
-            timer += Time.deltaTime * 10;
-            if (timer < duration)
-            {
-                ShiftSupply(shiftedSupplyCurve, -1); //negative - left, positive - right
-            }
-            else
-            {
-                timer = 0;
-                supplyShifting = false;
-                shiftType = "";
-            }
+            shiftType = "";
+            ShiftSupply(shiftedSupplyCurve, -10); //negative - left, positive - right
         }
         else if (demandShifting || shiftType.Equals("LeftwardShiftInDemand"))
         {
-            timer += Time.deltaTime * 10;
-            if (timer < duration)
-            {
-                ShiftDemand(shiftedDemandCurve, -1); //negative - left, positive - right
-            }
-            else
-            {
-                timer = 0;
-                demandShifting = false;
-                shiftType = "";
-            }
+            shiftType = "";
+            ShiftDemand(shiftedDemandCurve, -10); //negative - left, positive - right
         }
-
-        //Createline1s(horizontalOffset, verticalOffset);
     }
+
 
     public void RightwardShiftInSupply()
     {
@@ -286,6 +225,12 @@ public class Graph : MonoBehaviour
         demandLine.transform.rotation = dtargetRotation;
     }
 
+    public void UpdateLabels(LineRenderer line, TextMesh label, int position)
+    {
+        Vector3 offset = new Vector3(10, 10, 0);
+        label.transform.position = offset + line.transform.TransformPoint(line.GetPosition(position));
+    }
+
     /// <summary>
     /// Shifts a particular curve, and its labels
     /// </summary>
@@ -312,17 +257,15 @@ public class Graph : MonoBehaviour
         demandLabelText.text = "D" + demandLineCount;
 
 
-        Transform intersectionContainer = demandLineContainer.transform.Find("Intersection Line Container");
-        LineRenderer[] intersectionList = intersectionContainer.GetComponentsInChildren<LineRenderer>();
+        Transform gridLineContainer = demandLineContainer.transform.Find("Grid Line Container");
+        LineRenderer[] gridLineList = gridLineContainer.GetComponentsInChildren<LineRenderer>();
 
         LineRenderer demandLineRenderer = demandCurve.GetComponent<LineRenderer>();
 
-        MoveLineDiagonally(demandLineRenderer, demandGradient, amount, amount, "demand", demandLabel);
-        //Moveline1Diagonally(intersectionList[0], demandLineRenderer, "demandPrice");
-        //Moveline1Diagonally(intersectionList[1], demandLineRenderer, "demandQuantity");
+        coroutine = StartCoroutine(ShiftCurve(demandCurve, amount, gridLineContainer));
 
         //Put this into its own method later on...
-        TextMesh[] GridLineLabels = intersectionContainer.transform.GetComponentsInChildren<TextMesh>();
+        TextMesh[] GridLineLabels = gridLineContainer.transform.GetComponentsInChildren<TextMesh>();
         foreach (TextMesh label in GridLineLabels)
         {
             //Labels with no numbers for learning
@@ -362,16 +305,14 @@ public class Graph : MonoBehaviour
         }
         supplyLabelText.text = "S" + supplyLineCount;
 
-        Transform intersectionContainer = supplyLineContainer.transform.Find("Intersection Line Container");
-        LineRenderer[] intersectionList = intersectionContainer.GetComponentsInChildren<LineRenderer>();
+        Transform gridLineContainer = supplyLineContainer.transform.Find("Grid Line Container");
+        LineRenderer[] gridLineList = gridLineContainer.GetComponentsInChildren<LineRenderer>();
         LineRenderer supplyLineRenderer = supplyCurve.GetComponent<LineRenderer>();
 
-        MoveLineDiagonally(supplyLineRenderer, supplyGradient, amount, amount, "supply", supplyLabel);
-        Moveline1Diagonally(intersectionList[0], supplyLineRenderer, "supplyPrice");
-        Moveline1Diagonally(intersectionList[1], supplyLineRenderer, "supplyQuantity");
+        coroutine = StartCoroutine(ShiftCurve(supplyCurve, amount, gridLineContainer));
 
         //Put this into its own method later on...
-        TextMesh[] GridLineLabels = intersectionContainer.transform.GetComponentsInChildren<TextMesh>();
+        TextMesh[] GridLineLabels = gridLineContainer.transform.GetComponentsInChildren<TextMesh>();
         foreach (TextMesh label in GridLineLabels)
         {
             //Labels with no numbers for learning
@@ -391,134 +332,126 @@ public class Graph : MonoBehaviour
         }
     }
 
-    public void ShiftCurve(GameObject curve, float moveAmount)
+    IEnumerator ShiftCurve(Transform curve, int moveAmount, Transform gridLineContainer)
     {
-        Vector3 position = curve.transform.position; //move the y axis to shift diagonally.
-        if (curve.transform.parent.tag.Equals("Supply"))
+
+        int totalMovement = Math.Abs(moveAmount);
+        int unit = 1;
+        if(moveAmount < 0)
         {
-            position.y -= moveAmount;
+            unit = -1;
         }
-        else
+
+        for (int i = 0; i < totalMovement; i++)
         {
-            position.y += moveAmount;
+            TextMesh label = new TextMesh();
+            Vector3 position = curve.transform.position; //move the y axis to shift diagonally.
+            if (curve.transform.parent.tag.Equals("Supply"))
+            {
+                position.x += unit;
+                position.y -= unit;
+                label = curve.transform.parent.Find("Supply Label").GetComponent<TextMesh>();
+            }
+            else if (curve.parent.tag.Equals("Demand"))
+            {
+                position.x += unit;
+                position.y += unit;
+                label = curve.transform.parent.Find("Demand Label").GetComponent<TextMesh>();
+            }
+            curve.transform.position = position;
+
+            MoveGridLine(gridLineContainer, curve);
+
+            UpdateLabels(curve.GetComponent<LineRenderer>(), label, 0);
+
+            yield return new WaitForSeconds(0.01f); // wait for 1 second
+        }
+        StopCoroutine(coroutine);
+    }
+
+    public void MoveGridLine(Transform gridLineContainer, Transform curve)
+    {
+        Vector3 gridLinePoint = new Vector3(0,0,0);
+
+        if (curve.parent.tag.Equals("Supply"))
+        {
+            gridLinePoint = GetgridLinePoint(demandLine.GetComponent<LineRenderer>(), curve.GetComponent<LineRenderer>());
+            Debug.Log("This curve will intersect the Demand Curve");
+
+
+        }
+        else if (curve.parent.tag.Equals("Demand"))
+        {
+            gridLinePoint = GetgridLinePoint(supplyLine.GetComponent<LineRenderer>(), curve.GetComponent<LineRenderer>());
+            Debug.Log("This curve will intersect the Supply Curve");
+        }
+
+        LineRenderer[] gridLineRendererContainer = gridLineContainer.GetComponentsInChildren<LineRenderer>();
+
+        foreach (LineRenderer gridLineRenderer in gridLineRendererContainer)
+        {
+            gridLineRenderer.transform.position = gridLinePoint;
+            Vector3 position = new Vector3(0, 0, 0);
+            if (gridLineRenderer.name.Equals("Grid Line Horizontal")){
+
+                float difference =  xAxis.transform.position.x - gridLinePoint.x;
+                position = new Vector3(difference,0,0);
+                gridLineRenderer.SetPosition(1, position);
+
+                //Label
+                TextMesh label = gridLineRenderer.GetComponentInChildren<TextMesh>();
+                Vector3 offset = new Vector3(-5, 0, 0);
+                label.transform.position = gridLineRenderer.transform.TransformPoint(gridLineRenderer.GetPosition(1)) + offset;
+
+            }
+            else if(gridLineRenderer.name.Equals("Grid Line Vertical"))
+            {
+                float difference = yAxis.transform.position.y - gridLinePoint.y;
+                position = new Vector3(0, difference, 0);
+                gridLineRenderer.SetPosition(1, position);
+                TextMesh label = gridLineRenderer.GetComponentInChildren<TextMesh>();
+                Vector3 offset = new Vector3(0, -10, 0);
+                label.transform.position = gridLineRenderer.transform.TransformPoint(gridLineRenderer.GetPosition(1)) + offset;
+            }
         }
         
-        position.x += moveAmount;
-        curve.transform.position = position;
     }
 
 
-    public void MoveLineDiagonally(LineRenderer lineRenderer, float gradient, float moveAmountX, float moveAmountY, string curveType, GameObject label)
+    public Vector3 GetgridLinePoint(LineRenderer line1, LineRenderer line2)
     {
-        ShiftCurve(lineRenderer.gameObject, moveAmountX);
-        //Vector3 startPoint = lineRenderer.GetPosition(0);
-        //Vector3 endPoint = lineRenderer.GetPosition(1);
-
-        //// Calculate the x and y distances to move the line based on the given gradient
-        //float distanceX = moveAmountX / Mathf.Sqrt(1 + gradient * gradient);
-        //float distanceY = moveAmountY / Mathf.Sqrt(1 + gradient * gradient);
-
-        //Vector3 newStartPoint = new Vector3(0,0,0);
-        //Vector3 newEndPoint = new Vector3(0, 0, 0); ;
-        //// Calculate the new positions of the line's starting and ending points based on the calculated distances
-        //if (curveType.Equals("demand"))
-        //{
-        //    newStartPoint = new Vector3(startPoint.x + distanceX, startPoint.y + distanceY, startPoint.z);
-        //    newEndPoint = new Vector3(endPoint.x + distanceX, endPoint.y + distanceY, endPoint.z);
-        //}
-        //else if (curveType.Equals("supply"))
-        //{
-        //    newStartPoint = new Vector3(startPoint.x + distanceX, startPoint.y - distanceY, startPoint.z);
-        //    newEndPoint = new Vector3(endPoint.x + distanceX, endPoint.y - distanceY, endPoint.z);
-        //}
+        Vector3 line1start = line1.transform.TransformPoint(line1.GetPosition(0));
+        Vector3 line1end = line1.transform.TransformPoint(line1.GetPosition(1));
 
 
-        //// Update the positions of the line's starting and ending points
-        //lineRenderer.SetPosition(0, newStartPoint);
-        //lineRenderer.SetPosition(1, newEndPoint);
+        Vector3 p3 = line2.transform.TransformPoint(line2.GetPosition(0));
+        Vector3 p4 = line2.transform.TransformPoint(line2.GetPosition(1));
 
-        //label.transform.position = newEndPoint;
-    }
+        // Calculate the direction vectors of the two lines
+        Vector3 dir1 = line1end - line1start;
+        Vector3 dir2 = p4 - p3;
 
-    public void Moveline1Diagonally(LineRenderer line1, LineRenderer newCurve, string curveType)
-    {
-        Vector3 line1Start = line1.GetPosition(0);
-        Vector3 line1End = line1.GetPosition(1);
+        // Calculate the denominator of the equation for t1 and t2
+        float den = (dir1.x * dir2.y) - (dir1.y * dir2.x);
 
-        Vector3 newCurveStart = line1.GetPosition(0);
-        Vector3 NewCurveLineEnd = line1.GetPosition(1);
-
-        TextMesh label = line1.GetComponentInChildren<TextMesh>(); //Get label of line1
-
-        if (curveType.Equals("demandQuantity"))//demand1
+        // If the denominator is zero, the lines are parallel
+        if (Mathf.Approximately(den, 0))
         {
-            LineRenderer supplyLineRenderer = supplyLine.GetComponent<LineRenderer>();
-
-            Vector3 intersectionPoint = GetIntersectionPoint(newCurve, supplyLineRenderer);
-            line1.SetPosition(0, GetIntersectionPoint(newCurve, supplyLineRenderer));
-            line1End.x = intersectionPoint.x;
-            line1.SetPosition(1, line1End);
-
-            label.transform.position = line1End + new Vector3(0, -7 ,0);  //alignment
-
-
+            return Vector3.zero;
         }
-        if (curveType.Equals("demandPrice"))//demand2
+
+        // Calculate the values of t1 and t2
+        float t1 = ((p3.x - line1start.x) * dir2.y - (p3.y - line1start.y) * dir2.x) / den;
+        float t2 = ((p3.x - line1start.x) * dir1.y - (p3.y - line1start.y) * dir1.x) / den;
+
+        // If either t value is outside of the range [0, 1], there is no gridLine
+        if (t1 < 0 || t1 > 1 || t2 < 0 || t2 > 1)
         {
-            LineRenderer supplyLineRenderer = supplyLine.GetComponent<LineRenderer>();
-
-            Vector3 intersectionPoint = GetIntersectionPoint(newCurve, supplyLineRenderer);
-            line1.SetPosition(0, GetIntersectionPoint(newCurve, supplyLineRenderer));
-            line1End.y = intersectionPoint.y;
-            line1.SetPosition(1, line1End);
-
-            label.transform.position = line1End + new Vector3(-2, 0, 0);
+            return Vector3.zero;
         }
-        if (curveType.Equals("supplyQuantity"))
-        {
-            LineRenderer demandLineRenderer = demandLine.GetComponent<LineRenderer>();
-            Vector3 intersectionPoint = GetIntersectionPoint(newCurve, demandLineRenderer);
-            line1.SetPosition(0, GetIntersectionPoint(newCurve, demandLineRenderer));
-            line1End.x = intersectionPoint.x;
-            line1.SetPosition(1, line1End);
 
-            label.transform.position = line1End + new Vector3(0, -7, 0);  //alignment
-
-        }
-        if (curveType.Equals("supplyPrice"))
-        {
-            LineRenderer demandLineRenderer = demandLine.GetComponent<LineRenderer>();
-            Vector3 intersectionPoint = GetIntersectionPoint(newCurve, demandLineRenderer);
-            line1.SetPosition(0, GetIntersectionPoint(newCurve, demandLineRenderer));
-            //line1Start.y = intersectionPoint.y;
-            line1End.y = intersectionPoint.y;
-            line1.SetPosition(1, line1End);
-            label.transform.position = line1End + new Vector3(-2, 0, 0);
-        }
-    }
-
-    public Vector3 GetIntersectionPoint(LineRenderer line1, LineRenderer line2)
-    {
-        Vector3 intersection = new Vector3(0, 0, 0);
-
-        Vector3 line1Start = line1.GetPosition(0);
-        Vector3 line1End = line1.GetPosition(1);
-
-        Vector3 line2Start = line2.GetPosition(0);
-        Vector3 line2End = line2.GetPosition(1);
-
-        float m1 = (line1End.y - line1Start.y) / (line1End.x - line1Start.x); //(y2 - y1) / (x2 - x1)
-        float c1 = line1Start.y - m1 * line1Start.x; // y = mx + c -> y - mx = c
-
-        float m2 = (line2End.y - line2Start.y) / (line2End.x - line2Start.x);
-        float c2 = line2Start.y - m2 * line2Start.x;
-
-        float x = (c2 - c1) / (m1 - m2); // mx = c -> x = c/m
-
-        float y = (m1 * x) + c1; //plug in x
-
-        intersection = new Vector3(x, y, 0);
-
-        return intersection;
+        // Calculate the gridLine point and return it
+        return line1start + dir1 * t1;
     }
 }
+
