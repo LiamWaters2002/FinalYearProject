@@ -24,6 +24,10 @@ public class GeneratePreview : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    private void Start()
+    {
         Scene hiddenScene = SceneManager.CreateScene("HiddenScene");
         foreach (PlaceableObject placeableObject in placeableObjectList)
         {
@@ -53,7 +57,7 @@ public class GeneratePreview : MonoBehaviour
         camera.orthographicSize = 5;
         camera.nearClipPlane = 0.01f;
         camera.farClipPlane = 1000f;
-        camera.clearFlags = CameraClearFlags.Skybox;
+        camera.clearFlags = CameraClearFlags.Depth;
         camera.backgroundColor = new Color(1f, 1f, 1f, 0f);
 
         // Create a RenderTexture to hold the camera view

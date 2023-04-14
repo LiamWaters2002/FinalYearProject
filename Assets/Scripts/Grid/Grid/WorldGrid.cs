@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem.Controls;
 using UnityEngine.UI;
 
 public class WorldGrid : MonoBehaviour
@@ -75,7 +74,7 @@ public class WorldGrid : MonoBehaviour
                     string governmentMoneyString = governmentMoney.text.Replace(",", "");
                     int governmentMoneyInteger = int.Parse(governmentMoneyString);
                     int result = governmentMoneyInteger - placeableObject.GetPrice();
-                    
+
 
                     if (result > 0) //if player can afford buildingd
                     {
@@ -108,7 +107,7 @@ public class WorldGrid : MonoBehaviour
                     PlaceableObject gridObject = GetObjectAtGridPosition(gridPosition);
 
                 }
-                
+
             }
         }
     }

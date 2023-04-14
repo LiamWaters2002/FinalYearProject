@@ -7,6 +7,7 @@ public class GridDisplay : MonoBehaviour
     [SerializeField] private Transform gridDisplayPrefab;
 
     private GridCell[,] gridCellArray;
+    public Transform gridDisplayContainer;
 
     private void Start()
     {
@@ -21,6 +22,7 @@ public class GridDisplay : MonoBehaviour
                 GridPosition gridPosition = new GridPosition(x, z);
                 Transform gridCellTransform = Instantiate(gridDisplayPrefab, WorldGrid.Instance.GetWorldPosition(gridPosition), Quaternion.identity);
                 gridCellArray[x, z] = gridCellTransform.GetComponent<GridCell>();
+                gridCellTransform.parent = gridDisplayContainer;
             }
 
         }

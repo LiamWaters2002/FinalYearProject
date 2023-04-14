@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ActionBarController : MonoBehaviour
+public class CanvasController : MonoBehaviour
 {
     public Canvas ActionBarCanvas;
 
@@ -11,6 +11,8 @@ public class ActionBarController : MonoBehaviour
     public Canvas LearnCanvas;
     public Canvas PolicyCanvas;
     public Canvas MarketsCanvas;
+    public Canvas ShiftCurvesCanvas;
+    public Canvas ElasticityCanvas;
 
     public void Start()
     {
@@ -41,6 +43,16 @@ public class ActionBarController : MonoBehaviour
         CloseAllBut(MarketsCanvas);
     }
 
+    public void OnElasticityLearnClick()
+    {
+        CloseAllBut(ElasticityCanvas);
+    }
+
+    public void OnShiftsLearnClick()
+    {
+        CloseAllBut(ShiftCurvesCanvas);
+    }
+
     public void CloseAll()
     {
         CloseAllBut(null);
@@ -53,6 +65,8 @@ public class ActionBarController : MonoBehaviour
         LearnCanvas.enabled = false;
         MarketsCanvas.enabled = false;
         PolicyCanvas.enabled = false;
+        ShiftCurvesCanvas.enabled = false;
+        ElasticityCanvas.enabled = false;
 
         if (canvasToOpen == null)
         {
@@ -73,6 +87,18 @@ public class ActionBarController : MonoBehaviour
         else if (canvasToOpen.Equals(MarketsCanvas))
         {
             MarketsCanvas.enabled = true;
+        }
+        else if (canvasToOpen.Equals(PolicyCanvas))
+        {
+            PolicyCanvas.enabled = true;
+        }
+        else if (canvasToOpen.Equals(ShiftCurvesCanvas))
+        {
+            ShiftCurvesCanvas.enabled = true;
+        }
+        else if (canvasToOpen.Equals(ElasticityCanvas))
+        {
+            ElasticityCanvas.enabled = true;
         }
     }
 }

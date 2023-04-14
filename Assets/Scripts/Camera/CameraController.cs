@@ -35,12 +35,12 @@ public class CameraController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.E)) // e button
         {
-            transform.position += Vector3.up * yChange * Time.deltaTime; // increase the y level of this object smoothly
+            transform.position += Vector3.up * yChange * Time.deltaTime; // increase the y level of this object smoothly using deltatime
         }
 
         if (Input.GetKey(KeyCode.Q)) // q button
         {
-            transform.position -= Vector3.up * yChange * Time.deltaTime; // decrease the y level of this object smoothly
+            transform.position -= Vector3.up * yChange * Time.deltaTime; // decrease the y level of this object smoothly using deltatime
         }
 
 

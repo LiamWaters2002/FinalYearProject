@@ -17,8 +17,8 @@ public class BuildingMenu : MonoBehaviour
     public GeneratePreview generatePreview;
     public WorldGrid worldGrid;
 
+    public bool loopCompleted;
 
-    //Move start code to another script in future, it wont run when the menu is disabled...
     void Start()
     {
         Debug.Log("Start");
@@ -28,33 +28,41 @@ public class BuildingMenu : MonoBehaviour
         worldGrid = WorldGrid.Instance;
         generatePreview = GeneratePreview.Instance;
 
-        for (int i = 0; i < generatePreview.placeableObjectList.Count; i++)
+    }
+
+    void Update()
+    {
+        if (BuildMenuCanvas.enabled && !loopCompleted)
         {
-            int x = generatePreview.GetPreviewSize();
+            loopCompleted = true;
+            for (int i = 0; i < generatePreview.placeableObjectList.Count; i++)
+            {
+                int x = generatePreview.GetPreviewSize();
 
-            PlaceableObject placeableObject = generatePreview.GetPlaceableObject(i);
+                PlaceableObject placeableObject = generatePreview.GetPlaceableObject(i);
 
-            Debug.Log("Item added");
-            GameObject button = Instantiate(buildingButtonPrefab) as GameObject;
-            button.transform.SetParent(scrollViewContent.transform, false);
-            button.GetComponent<Button>().onClick.AddListener(() => SelectObject(placeableObject));
+                Debug.Log("Item added");
+                GameObject button = Instantiate(buildingButtonPrefab) as GameObject;
+                button.transform.SetParent(scrollViewContent.transform, false);
+                button.GetComponent<Button>().onClick.AddListener(() => SelectObject(placeableObject));
 
 
-            Transform imageComponent = button.gameObject.transform.Find("Image");
-            Image image = imageComponent.GetComponent<Image>();
-            image.sprite = generatePreview.GetPreview(i);
+                Transform imageComponent = button.gameObject.transform.Find("Image");
+                Image image = imageComponent.GetComponent<Image>();
+                image.sprite = generatePreview.GetPreview(i);
 
-            Transform name = button.transform.Find("Name");
-            Text txtName = name.GetComponent<Text>();
-            txtName.text = placeableObject.GetName();
+                Transform name = button.transform.Find("Name");
+                Text txtName = name.GetComponent<Text>();
+                txtName.text = placeableObject.GetName();
 
-            Transform description = button.transform.Find("Description");
-            Text txtDescription = description.GetComponent<Text>();
-            txtDescription.text = placeableObject.GetDescription();
+                Transform description = button.transform.Find("Description");
+                Text txtDescription = description.GetComponent<Text>();
+                txtDescription.text = placeableObject.GetDescription();
 
-            Transform price = button.transform.Find("Price");
-            Text txtPrice = price.GetComponent<Text>();
-            txtPrice.text = placeableObject.GetPrice().ToString("n0");
+                Transform price = button.transform.Find("Price");
+                Text txtPrice = price.GetComponent<Text>();
+                txtPrice.text = placeableObject.GetPrice().ToString("n0");
+            }
         }
     }
 
@@ -76,3 +84,4 @@ public class BuildingMenu : MonoBehaviour
         ActionBarCanvas.enabled = true;
     }
 }
+

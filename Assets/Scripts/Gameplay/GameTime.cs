@@ -8,18 +8,17 @@ public class GameTime : MonoBehaviour
     public float secondsPerMonth = 1f;
     public bool isGameTimePaused = false; // Whether game time is paused or not
     public int currentMonth = 1; // The current month
-    public int currentYear = 2023; // The current year
-    public Text monthText; // The Text object for the month display
-    public Text yearText; // The Text object for the year display
+    public int currentYear; // The current year
+    public Text monthText; 
+    public Text yearText; 
     public float totalElapsedTime = 0f;
 
+    public Image imgPausePlay;
+    public Sprite pause;
+    public Sprite play;
 
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
+
     void Update()
     {
         if (!isGameTimePaused)
@@ -37,18 +36,17 @@ public class GameTime : MonoBehaviour
                 currentYear += Mathf.FloorToInt(currentMonth / 12);
                 currentMonth %= 12;
             }
-
-            // Update the UI text
             monthText.text = currentMonth.ToString();
             yearText.text = currentYear.ToString();
 
-            // Subtract the time corresponding to the elapsed months from the total elapsed time
+            // Subtract the time linked with elapsed months from the total elapsed time
             totalElapsedTime -= monthsPassed * secondsPerMonth;
         }
     }
 
     public void IncreaseGameTimeSpeed()
     {
+        //Only increase game time speed if it is not greater than 1 second per month
         if (secondsPerMonth != 1)
         {
             secondsPerMonth = secondsPerMonth - 1f;
@@ -67,5 +65,14 @@ public class GameTime : MonoBehaviour
     public void ToggleGameTimePaused()
     {
         isGameTimePaused = !isGameTimePaused;
+
+        if (isGameTimePaused)
+        {
+            imgPausePlay.sprite = play;
+        }
+        else
+        {
+            imgPausePlay.sprite = pause;
+        }
     }
 }

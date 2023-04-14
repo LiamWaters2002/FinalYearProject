@@ -8,6 +8,8 @@ TagManager:
   - PlaceableObject
   - Demand
   - Supply
+  - Buyer
+  - Seller
   layers:
   - Default
   - TransparentFX
