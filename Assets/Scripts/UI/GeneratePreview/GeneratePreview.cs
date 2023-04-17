@@ -20,7 +20,7 @@ public class GeneratePreview : MonoBehaviour
         {
             Instance = this;
             previewObjectImages = new List<Sprite>();
-            RenderTexture renderTexture = Resources.Load<RenderTexture>("RenderTexture/test");
+            renderTexture = Resources.Load<RenderTexture>("RenderTexture/test");
         }
         else
         {
@@ -53,6 +53,8 @@ public class GeneratePreview : MonoBehaviour
         //Camera Setup
         GameObject cameraObject = new GameObject("Camera");
         Camera camera = cameraObject.AddComponent<Camera>();
+
+
         if (placeableObject.GetxWidth() < 5 && placeableObject.GetzDepth() < 5)
         {
             camera.transform.position = prefabInstance.transform.position + new Vector3(placeableObject.GetxWidth() * 5, 7, placeableObject.GetzDepth() * 5);
@@ -71,14 +73,13 @@ public class GeneratePreview : MonoBehaviour
         }
         
         camera.transform.LookAt(prefabInstance.transform.Find("Plane")); //Focus on object with current setup.
-        
         camera.clearFlags = CameraClearFlags.Color;
-        camera.backgroundColor = new Color(150,150,150);
+        camera.backgroundColor = new Color(0.84f, 0.84f, 0.84f);
 
         // Create a RenderTexture to hold the camera view
-        RenderTexture renderTexture = new RenderTexture(1024, 1024, 24);
+        renderTexture = new RenderTexture(1024, 1024, 24);
 
-        // Render the camera view to the RenderTexture
+        // Make camera render the RenderTexture
         camera.targetTexture = renderTexture;
         camera.Render();
 
