@@ -9,14 +9,6 @@ using UnityEngine.UIElements;
 
 public class Graph : MonoBehaviour
 {
-    public float minX = 0f; //Check unity inspector
-    public float maxX = 150f; //Check unity inspector
-    public float minY = 0f; //Check unity inspector
-    public float maxY = 100f; //Check unity inspector
-
-    public float scaleXAxis = 2f;
-    public float scaleYAxis = 2f;
-
     public float supplyIntercept = 0f; //Check unity inspector
     public float supplyGradient = 1f; //Check unity inspector
     public float demandIntercept = 50f; //Check unity inspector
@@ -54,13 +46,13 @@ public class Graph : MonoBehaviour
     public float duration = 0.01f;
 
     public string shiftType = "";
+    private bool thisShiftHappeneed;
     Coroutine coroutine;
+
+    public GameObject graphContainer;
 
     void Start()
     {
-
-        supplyLine = supplyLineContainer.transform.Find("Supply Line").gameObject;
-        demandLine = demandLineContainer.transform.Find("Demand Line").gameObject;
 
         //Initialise supply
         LineRenderer supplyLineRenderer = supplyLine.GetComponent<LineRenderer>();
@@ -105,6 +97,12 @@ public class Graph : MonoBehaviour
         {
             CheckShiftType();
         }
+
+        if(this.transform.name.Equals("Orange Market") && !thisShiftHappeneed)
+        {
+            LeftwardShiftInDemand();
+            thisShiftHappeneed = true;
+        }
     }
 
     public void CheckShiftType()
@@ -138,7 +136,7 @@ public class Graph : MonoBehaviour
         shiftType = "RightwardShiftInSupply";
         if (!supplyShifted && !supplyShifting)
         {
-            shiftedSupplyCurve = Instantiate(supplyLineContainer);
+            shiftedSupplyCurve = Instantiate(supplyLineContainer, this.transform); //Must be at the this.transform position, or it will go to reference...
             shiftedSupplyCurve.transform.parent = this.transform;
             supplyShifted = true;
             supplyShifting = true;
@@ -151,7 +149,7 @@ public class Graph : MonoBehaviour
         shiftType = "LeftwardShiftInSupply";
         if (!supplyShifted && !supplyShifting)
         {
-            shiftedSupplyCurve = Instantiate(supplyLineContainer);
+            shiftedSupplyCurve = Instantiate(supplyLineContainer, this.transform);
             shiftedSupplyCurve.transform.parent = this.transform;
             supplyShifted = true;
             supplyShifting = true;
@@ -165,7 +163,7 @@ public class Graph : MonoBehaviour
 
         if (!demandShifted)
         {
-            shiftedDemandCurve = Instantiate(demandLineContainer);
+            shiftedDemandCurve = Instantiate(demandLineContainer, this.transform);
             shiftedDemandCurve.transform.parent = this.transform; //Make curve parent of the original
             demandShifted = true;
             demandShifting = true;
@@ -179,7 +177,7 @@ public class Graph : MonoBehaviour
 
         if (!demandShifted)
         {
-            shiftedDemandCurve = Instantiate(demandLineContainer);
+            shiftedDemandCurve = Instantiate(demandLineContainer, this.transform);
             shiftedDemandCurve.transform.parent = this.transform; //Make curve parent of the original
             demandShifted = true;
             demandShifting = true;

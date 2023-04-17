@@ -11,7 +11,7 @@ public class GameTime : MonoBehaviour
     public int currentYear; // The current year
     public Text monthText; 
     public Text yearText; 
-    public float totalElapsedTime = 0f;
+    public float gameDuration = 0f;
 
     public Image imgPausePlay;
     public Sprite pause;
@@ -23,11 +23,10 @@ public class GameTime : MonoBehaviour
     {
         if (!isGameTimePaused)
         {
-            // Add the current frame's time to the total elapsed time
-            totalElapsedTime += Time.deltaTime;
+            gameDuration = gameDuration +  Time.deltaTime;
 
-            // Calculate how many months have passed based on the total elapsed time
-            int monthsPassed = Mathf.FloorToInt(totalElapsedTime / secondsPerMonth);
+            // Calculate how many months have passed based on the total elapsed time(float to int)
+            int monthsPassed = Mathf.FloorToInt(gameDuration / secondsPerMonth);
 
             // Increment the month and year based on the number of months passed
             currentMonth += monthsPassed;
@@ -40,7 +39,7 @@ public class GameTime : MonoBehaviour
             yearText.text = currentYear.ToString();
 
             // Subtract the time linked with elapsed months from the total elapsed time
-            totalElapsedTime -= monthsPassed * secondsPerMonth;
+            gameDuration -= monthsPassed * secondsPerMonth;
         }
     }
 

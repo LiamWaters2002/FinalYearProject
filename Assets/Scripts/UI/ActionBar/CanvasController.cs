@@ -101,4 +101,9 @@ public class CanvasController : MonoBehaviour
             ElasticityCanvas.enabled = true;
         }
     }
+
+    public bool isLearnOpen()
+    {
+        return LearnCanvas.enabled;
+    }
 }

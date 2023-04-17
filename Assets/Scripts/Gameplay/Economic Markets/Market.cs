@@ -101,7 +101,7 @@ public class Market
     /// </summary>
     /// <param name="price"> P = Price </param>
     /// <param name="constantC"> c = Constant (supply given even when price is 0) </param>
-    /// <param name="supplyGradient"></param>
+    /// <param name="supplyGradient">d = supply gradient</param>
     /// <returns></returns>
     public float QuantitySupplied(float price, float constantC, float supplyGradient)
     {

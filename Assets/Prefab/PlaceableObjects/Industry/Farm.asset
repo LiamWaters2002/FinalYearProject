@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a022d4078fbc2f04dbdf459f0594a84b, type: 3}
   m_Name: Farm
   m_EditorClassIdentifier: 
-  prefab: {fileID: 5034855539563185112, guid: 3ffa8e90e860ef544a1b73edad81bb1a, type: 3}
+  prefab: {fileID: 5034855539563185112, guid: 2818dff0ca95aab42a1afab3a2838910, type: 3}
   buttonImage: {fileID: 0}
-  name: Steel Mill
-  description: Converts iron to steel
+  name: Farm
+  description: Used to obtain wheat
   price: 2000000
-  xWidth: 10
-  zDepth: 8
+  xWidth: 19
+  zDepth: 19

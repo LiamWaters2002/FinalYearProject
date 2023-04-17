@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a022d4078fbc2f04dbdf459f0594a84b, type: 3}
-  m_Name: House
+  m_Name: Car Factory
   m_EditorClassIdentifier: 
-  prefab: {fileID: 5034855539563185112, guid: eac42a3936f37bb4dbc5a722505a0206, type: 3}
+  prefab: {fileID: 5034855539563185112, guid: 0b8530b36362b914392593059139d6d8, type: 3}
   buttonImage: {fileID: 0}
-  name: House
-  description: Housing for residednts
-  price: 300000
-  xWidth: 10
-  zDepth: 8
+  name: Car Factory
+  description: Creates cars, using steel
+  price: 2000000
+  xWidth: 30
+  zDepth: 19

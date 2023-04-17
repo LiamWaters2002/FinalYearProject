@@ -66,13 +66,5 @@ public class CameraController : MonoBehaviour
         float rotationSpeed = 100f;
 
         transform.eulerAngles += rotationVector * rotationSpeed * Time.deltaTime;
-
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
-        {
-            moveSpeed = 0.01f;
-            Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
-            transform.position += moveSpeed * new Vector3(-touchDeltaPosition.x, 0, -touchDeltaPosition.y);
-        }
     }
-
 }
