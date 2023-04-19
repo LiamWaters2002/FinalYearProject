@@ -2296,6 +2296,10 @@ MonoBehaviour:
   verticalOffset: 0
   axisOffset: 0
   curveThickness: 3
+  quantityLabel: {fileID: 0}
+  priceLabel: {fileID: 0}
+  quantity: 0
+  price: 0
   demandLineContainer: {fileID: 788301521}
   supplyLineContainer: {fileID: 510182006}
   supplyLine: {fileID: 1402450331}
@@ -5551,7 +5555,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1280, y: 100}
+  m_SizeDelta: {x: 1280, y: 120}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &546894833
 MonoBehaviour:
@@ -11479,6 +11483,10 @@ MonoBehaviour:
   verticalOffset: 0
   axisOffset: 0
   curveThickness: 3
+  quantityLabel: {fileID: 0}
+  priceLabel: {fileID: 0}
+  quantity: 0
+  price: 0
   demandLineContainer: {fileID: 1582755778}
   supplyLineContainer: {fileID: 543328422}
   supplyLine: {fileID: 1596374275}
@@ -11582,7 +11590,7 @@ MonoBehaviour:
   currentYear: 0
   monthText: {fileID: 345798267}
   yearText: {fileID: 412452088}
-  totalElapsedTime: 0
+  gameDuration: 0
   imgPausePlay: {fileID: 1647227053}
   pause: {fileID: 21300000, guid: b7afd8359742811418402b707b3c5846, type: 3}
   play: {fileID: 21300000, guid: 42c67287b2325a442b57dbce05b4f1e1, type: 3}
@@ -15345,7 +15353,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7fce4dcc60ad61147ab3ba4b657b283f, type: 2}
   - {fileID: 11400000, guid: 9ca96a8e5a724b1418be8badba7aa805, type: 2}
   - {fileID: 11400000, guid: 653650a8c69f7be4195b102c9949aab4, type: 2}
+  - {fileID: 11400000, guid: eb660221ac83d2a428c6e67eca26f551, type: 2}
   previewObjectImages: []
+  renderTexture: {fileID: 0}
 --- !u!1 &1398382427
 GameObject:
   m_ObjectHideFlags: 0
@@ -19547,7 +19557,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef7afa9ab8176004190ac00dea24a465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  transformBuilding: {fileID: 4297209050325262892, guid: 3ffa8e90e860ef544a1b73edad81bb1a, type: 3}
 --- !u!4 &1753757169
 Transform:
   m_ObjectHideFlags: 0
@@ -20991,7 +21000,7 @@ GameObject:
   - component: {fileID: 1907988694}
   - component: {fileID: 1907988695}
   m_Layer: 8
-  m_Name: Iron Market
+  m_Name: Iron Ore Market
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21037,6 +21046,10 @@ MonoBehaviour:
   verticalOffset: 0
   axisOffset: 0
   curveThickness: 3
+  quantityLabel: {fileID: 0}
+  priceLabel: {fileID: 0}
+  quantity: 0
+  price: 0
   demandLineContainer: {fileID: 834206814}
   supplyLineContainer: {fileID: 1470703544}
   supplyLine: {fileID: 1367493384}
@@ -21535,7 +21548,7 @@ GameObject:
   - component: {fileID: 1933031190}
   - component: {fileID: 1933031191}
   m_Layer: 8
-  m_Name: Steel Market (1)
+  m_Name: Cars Market
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21581,6 +21594,10 @@ MonoBehaviour:
   verticalOffset: 0
   axisOffset: 0
   curveThickness: 3
+  quantityLabel: {fileID: 0}
+  priceLabel: {fileID: 0}
+  quantity: 0
+  price: 0
   demandLineContainer: {fileID: 1564326349}
   supplyLineContainer: {fileID: 2022148163}
   supplyLine: {fileID: 915053229}
@@ -24269,6 +24286,10 @@ MonoBehaviour:
   verticalOffset: 0
   axisOffset: 0
   curveThickness: 3
+  quantityLabel: {fileID: 0}
+  priceLabel: {fileID: 0}
+  quantity: 0
+  price: 0
   demandLineContainer: {fileID: 6235280270434290817}
   supplyLineContainer: {fileID: 3474107292019204083}
   supplyLine: {fileID: 2232032612183013653}

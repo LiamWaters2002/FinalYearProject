@@ -6,7 +6,6 @@ using UnityEngine;
 public class GridObject
 {
     private PlaceableObject[,] gridObjectArray;
-    private Grid grid;
     public GridObject(Grid grid)
     {
         gridObjectArray = new PlaceableObject[grid.getWidth(), grid.getHeight()];
@@ -14,7 +13,6 @@ public class GridObject
 
     public void AddObject(PlaceableObject placeableObject, GridPosition gridPosition, string direction)
     {
-        //gridObjectArray[gridPosition.getX(), gridPosition.getZ()] = placeableObject;
         int xWidth = placeableObject.GetxWidth();
         int zDepth = placeableObject.GetzDepth();
         Debug.Log("Width = " + xWidth + " Height = " + zDepth);
@@ -33,7 +31,7 @@ public class GridObject
         }
         else if (direction == "left" || direction == "right")
         {
-            for (int x = 0; x < zDepth; x++) //switch xWidth to zDepth
+            for (int x = 0; x < zDepth; x++) //switch xWidth and zDepth
             {
                 for (int z = 0; z < xWidth; z++)
                 {
@@ -54,10 +52,6 @@ public class GridObject
 
     public bool isObstructed(GridPosition gridPosition, PlaceableObject placeableObject)
     {
-        //if (gridObjectArray[gridPosition.getX(), gridPosition.getZ()] != null)
-        //{
-        //    return true;
-        //}
 
         int clickedX = gridPosition.getX();
         int clickedZ = gridPosition.getZ();

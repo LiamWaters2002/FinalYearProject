@@ -41,7 +41,7 @@ public class PressedPosition : MonoBehaviour
     /// <summary>
     /// Sets the static variable clickPosition.
     /// </summary>
-    /// <param name="position">raycastHit.point, includes coordinates of the last click on the world's plane.</param>
+    /// <param name="position"></param>
     private void setClickPosition(Vector3 point)
     {
         clickPosition = point;

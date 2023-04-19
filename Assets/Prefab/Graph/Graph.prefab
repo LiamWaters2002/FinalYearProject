@@ -1813,6 +1813,10 @@ MonoBehaviour:
   verticalOffset: 0
   axisOffset: 0
   curveThickness: 3
+  quantityLabel: {fileID: 4244632791030280014}
+  priceLabel: {fileID: 99243349610665037}
+  quantity: 100
+  price: 100
   demandLineContainer: {fileID: 108102949061567820}
   supplyLineContainer: {fileID: 7439567791447242302}
   supplyLine: {fileID: 5328286693030170840}

@@ -15,16 +15,6 @@ public class Direction : MonoBehaviour
         currentDirection = "down";
     }
 
-    //public static Direction DirectionInstance()
-    //{
-    //    return Instance;
-    //    if (direction == null)
-    //    {
-    //        direction = new direction();
-    //    }
-    //    return direction;
-    //}
-
     private void Awake()
     {
         if (Instance != null)
@@ -33,8 +23,6 @@ public class Direction : MonoBehaviour
         }
         Instance = this;
     }
-
-
 
         public void TurnClockwise()
     {

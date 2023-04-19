@@ -10,6 +10,7 @@ TagManager:
   - Supply
   - Buyer
   - Seller
+  - Plane
   layers:
   - Default
   - TransparentFX

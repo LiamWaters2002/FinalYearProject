@@ -4,31 +4,32 @@ using UnityEngine;
 
 public class Grid
 {
-    private int height;
-    private int width;
+    private int zDepth;
+    private int xWidth;
     private float cellSize;
     private GridObject gridObject;
 
 
-    public Grid(int height, int width, float cellSize)
+    public Grid(int zDepth, int xWidth, float cellSize)
     {
-        this.height = height;
-        this.width = width;
+        this.zDepth = zDepth;
+        this.xWidth = xWidth;
         this.cellSize = cellSize;
         gridObject = new GridObject(this);
         loop();
     }
 
+    /// <summary>
+    /// Create new GridPositions
+    /// </summary>
     public void loop()
     {
 
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < xWidth; x++)
         {
-            for (int z = 0; z < height; z++)
+            for (int z = 0; z < zDepth; z++)
             {
                 GridPosition gridPosition = new GridPosition(x, z);
-                //gridObject.AddObject(this, GridPosition);
-                //Debug.DrawLine(GetWorldPosition(gridPosition), GetWorldPosition(gridPosition) + Vector3.right * .9f, Color.red, 1000);
             }
         }
     }
@@ -52,11 +53,11 @@ public class Grid
 
     public int getWidth()
     {
-        return width;
+        return xWidth;
     }
 
     public int getHeight()
     {
-        return height;
+        return zDepth;
     }
 }

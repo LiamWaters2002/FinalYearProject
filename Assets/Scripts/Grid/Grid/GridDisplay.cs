@@ -27,24 +27,4 @@ public class GridDisplay : MonoBehaviour
 
         }
     }
-
-    public void HideGrid()
-    {
-        for (int x = 0; x < WorldGrid.Instance.GetWidth(); x++)
-        {
-            for (int z = 0; z < WorldGrid.Instance.GetWidth(); z++)
-            {
-                gridCellArray[x, z].HideCell();
-            }
-
-        }
-    }
-
-    public void DisplayGrid(List<GridPosition> gridPositionList)
-    {
-        foreach (GridPosition position in gridPositionList)
-        {
-            gridCellArray[position.getX(), position.getZ()].DisplayCell();
-        }
-    }
 }

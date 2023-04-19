@@ -9,9 +9,7 @@ using UnityEngine.UIElements;
 
 public class Graph : MonoBehaviour
 {
-    public float supplyIntercept = 0f; //Check unity inspector
     public float supplyGradient = 1f; //Check unity inspector
-    public float demandIntercept = 50f; //Check unity inspector
     public float demandGradient = -1f; //Check unity inspector
 
     public float horizontalOffset = 0f; //Moves whole graph left/right
@@ -19,6 +17,11 @@ public class Graph : MonoBehaviour
     public float axisOffset = 30f; //Moves just the axis
 
     public float curveThickness;
+
+    public TextMesh quantityLabel;
+    public TextMesh priceLabel;
+    public float quantity;
+    public float price;
 
     public GameObject demandLineContainer;
     public GameObject supplyLineContainer;
@@ -90,19 +93,26 @@ public class Graph : MonoBehaviour
     public void Update()
     {
         UpdateCurves(horizontalOffset, verticalOffset, supplyGradient, demandGradient);
-        UpdateLabels(demandLine.GetComponent<LineRenderer>(), demandLabel.GetComponent<TextMesh>(), 0);
-        UpdateLabels(supplyLine.GetComponent<LineRenderer>(), supplyLabel.GetComponent<TextMesh>(), 0);
+        UpdateLabelPosition(demandLine.GetComponent<LineRenderer>(), demandLabel.GetComponent<TextMesh>(), 0);
+        UpdateLabelPosition(supplyLine.GetComponent<LineRenderer>(), supplyLabel.GetComponent<TextMesh>(), 0);
+       
+        //if ()
+        //{
+
+        //}
+        
 
         if (shiftType != "")
         {
             CheckShiftType();
         }
 
-        if(this.transform.name.Equals("Orange Market") && !thisShiftHappeneed)
-        {
-            LeftwardShiftInDemand();
-            thisShiftHappeneed = true;
-        }
+        ////Test if individual market shift works...
+        //if(this.transform.name.Equals("Orange Market") && !thisShiftHappeneed)
+        //{
+        //    LeftwardShiftInDemand();
+        //    thisShiftHappeneed = true;
+        //}
     }
 
     public void CheckShiftType()
@@ -188,15 +198,6 @@ public class Graph : MonoBehaviour
 
     public void UpdateCurves(float horizontalOffset, float verticalOffset, float supplyGradient, float demandGradient)
     {
-
-        //Center of the curve
-        Vector3 centerOfGraph = demandLine.transform.position;
-
-        Quaternion rotation = Quaternion.Euler(0f, 0f, 0f);//centre rotation
-
-        Vector3[] supplyPositions = new Vector3[2];
-        Vector3 localPosition = new Vector3(centerOfGraph.x + horizontalOffset, centerOfGraph.y + verticalOffset, 0f);
-
         float sangle = Mathf.Atan(supplyGradient) * Mathf.Rad2Deg;
         Quaternion stargetRotation = Quaternion.Euler(0, 0, sangle);
 
@@ -204,11 +205,6 @@ public class Graph : MonoBehaviour
 
         supplyLine.transform.RotateAround(spivot, Vector3.forward, sangle - supplyLine.transform.rotation.eulerAngles.z);
         supplyLine.transform.rotation = stargetRotation;
-
-
-        Vector3[] demandPositions = new Vector3[2];
-        Vector3 localPosition2 = new Vector3(-centerOfGraph.x + horizontalOffset, centerOfGraph.y + verticalOffset, 0f);
-
 
         float dangle = Mathf.Atan(demandGradient) * Mathf.Rad2Deg;
         Quaternion dtargetRotation = Quaternion.Euler(0, 0, dangle);
@@ -223,7 +219,7 @@ public class Graph : MonoBehaviour
         demandLine.transform.rotation = dtargetRotation;
     }
 
-    public void UpdateLabels(LineRenderer line, TextMesh label, int position)
+    public void UpdateLabelPosition(LineRenderer line, TextMesh label, int position)
     {
         Vector3 offset = new Vector3(10, 10, 0);
         label.transform.position = offset + line.transform.TransformPoint(line.GetPosition(position));
@@ -361,7 +357,7 @@ public class Graph : MonoBehaviour
 
             MoveGridLine(gridLineContainer, curve);
 
-            UpdateLabels(curve.GetComponent<LineRenderer>(), label, 0);
+            UpdateLabelPosition(curve.GetComponent<LineRenderer>(), label, 0);
 
             yield return new WaitForSeconds(0.01f); // wait for 1 second
         }
