@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection.Emit;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
@@ -12,11 +13,7 @@ public class Graph : MonoBehaviour
     public float supplyGradient = 1f; //Check unity inspector
     public float demandGradient = -1f; //Check unity inspector
 
-    public float horizontalOffset = 0f; //Moves whole graph left/right
-    public float verticalOffset = 30f; //Moves whole graph up/down
-    public float axisOffset = 30f; //Moves just the axis
-
-    public float curveThickness;
+    public float curveThickness = 3;
 
     public TextMesh quantityLabel;
     public TextMesh priceLabel;
@@ -37,20 +34,13 @@ public class Graph : MonoBehaviour
     private Vector3[] horizontalGridLinePositions;
     private Vector3[] verticalGridLinePositions;
 
-    GameObject shiftedDemandCurve;
-    GameObject shiftedSupplyCurve;
+    GameObject shiftedDemandContainer;
+    GameObject shiftedSupplyContainer;
 
     public bool demandShifted = false;
     public bool supplyShifted = false;
-    public bool demandShifting = false;
-    public bool supplyShifting = false;
-
-    public float timer = 0;
-    public float duration = 0.01f;
 
     public string shiftType = "";
-    private bool thisShiftHappeneed;
-    Coroutine coroutine;
 
     public GameObject graphContainer;
 
@@ -92,27 +82,14 @@ public class Graph : MonoBehaviour
 
     public void Update()
     {
-        UpdateCurves(horizontalOffset, verticalOffset, supplyGradient, demandGradient);
+        UpdateCurves(supplyGradient, demandGradient);
         UpdateLabelPosition(demandLine.GetComponent<LineRenderer>(), demandLabel.GetComponent<TextMesh>(), 0);
         UpdateLabelPosition(supplyLine.GetComponent<LineRenderer>(), supplyLabel.GetComponent<TextMesh>(), 0);
-       
-        //if ()
-        //{
-
-        //}
         
-
         if (shiftType != "")
         {
             CheckShiftType();
         }
-
-        ////Test if individual market shift works...
-        //if(this.transform.name.Equals("Orange Market") && !thisShiftHappeneed)
-        //{
-        //    LeftwardShiftInDemand();
-        //    thisShiftHappeneed = true;
-        //}
     }
 
     public void CheckShiftType()
@@ -120,23 +97,23 @@ public class Graph : MonoBehaviour
         if (shiftType.Equals("RightwardShiftInSupply"))
         {
             shiftType = "";
-            ShiftSupply(shiftedSupplyCurve, 10); //negative - left, positive - right
+            ShiftSupply(shiftedSupplyContainer, 10); //negative - left, positive - right
             
         }
         else if (shiftType.Equals("RightwardShiftInDemand"))
         {
             shiftType = "";
-            ShiftDemand(shiftedDemandCurve, 10); //negative - left, positive - right
+            ShiftDemand(shiftedDemandContainer, 10); //negative - left, positive - right
         }
         else if (shiftType.Equals("LeftwardShiftInSupply"))
         {
             shiftType = "";
-            ShiftSupply(shiftedSupplyCurve, -10); //negative - left, positive - right
+            ShiftSupply(shiftedSupplyContainer, -10); //negative - left, positive - right
         }
         else if (shiftType.Equals("LeftwardShiftInDemand"))
         {
             shiftType = "";
-            ShiftDemand(shiftedDemandCurve, -10); //negative - left, positive - right
+            ShiftDemand(shiftedDemandContainer, -10); //negative - left, positive - right
         }
     }
 
@@ -144,12 +121,11 @@ public class Graph : MonoBehaviour
     public void RightwardShiftInSupply()
     {
         shiftType = "RightwardShiftInSupply";
-        if (!supplyShifted && !supplyShifting)
+        if (!supplyShifted)
         {
-            shiftedSupplyCurve = Instantiate(supplyLineContainer, this.transform); //Must be at the this.transform position, or it will go to reference...
-            shiftedSupplyCurve.transform.parent = this.transform;
+            shiftedSupplyContainer = Instantiate(supplyLineContainer, this.transform); //Must be at the this.transform position, or it will go to reference...
+            shiftedSupplyContainer.transform.parent = this.transform;  //Make curve parent graph object
             supplyShifted = true;
-            supplyShifting = true;
         }
         supplyShifted = true;
     }
@@ -157,12 +133,11 @@ public class Graph : MonoBehaviour
     public void LeftwardShiftInSupply()
     {
         shiftType = "LeftwardShiftInSupply";
-        if (!supplyShifted && !supplyShifting)
+        if (!supplyShifted)
         {
-            shiftedSupplyCurve = Instantiate(supplyLineContainer, this.transform);
-            shiftedSupplyCurve.transform.parent = this.transform;
+            shiftedSupplyContainer = Instantiate(supplyLineContainer, this.transform);
+            shiftedSupplyContainer.transform.parent = this.transform;  //Make curve parent graph object
             supplyShifted = true;
-            supplyShifting = true;
         }
         supplyShifted = true;
     }
@@ -173,10 +148,9 @@ public class Graph : MonoBehaviour
 
         if (!demandShifted)
         {
-            shiftedDemandCurve = Instantiate(demandLineContainer, this.transform);
-            shiftedDemandCurve.transform.parent = this.transform; //Make curve parent of the original
+            shiftedDemandContainer = Instantiate(demandLineContainer, this.transform);
+            shiftedDemandContainer.transform.parent = this.transform;  //Make curve parent graph object
             demandShifted = true;
-            demandShifting = true;
         }
         demandShifted = true;
     }
@@ -187,36 +161,48 @@ public class Graph : MonoBehaviour
 
         if (!demandShifted)
         {
-            shiftedDemandCurve = Instantiate(demandLineContainer, this.transform);
-            shiftedDemandCurve.transform.parent = this.transform; //Make curve parent of the original
+            shiftedDemandContainer = Instantiate(demandLineContainer, this.transform);
+            shiftedDemandContainer.transform.parent = this.transform; //Make curve parent graph object
             demandShifted = true;
-            demandShifting = true;
         }
         demandShifted = true;
     }
 
 
-    public void UpdateCurves(float horizontalOffset, float verticalOffset, float supplyGradient, float demandGradient)
+    public void UpdateCurves(float supplyGradient, float demandGradient)
     {
-        float sangle = Mathf.Atan(supplyGradient) * Mathf.Rad2Deg;
-        Quaternion stargetRotation = Quaternion.Euler(0, 0, sangle);
 
-        Vector3 spivot = supplyLine.transform.position + new Vector3(horizontalOffset, verticalOffset, 0f);
+        float sRadians = Mathf.Atan(supplyGradient);
+        float sAngle = sRadians * Mathf.Rad2Deg;
+        Quaternion stargetRotation = Quaternion.Euler(0, 0, sAngle);
 
-        supplyLine.transform.RotateAround(spivot, Vector3.forward, sangle - supplyLine.transform.rotation.eulerAngles.z);
         supplyLine.transform.rotation = stargetRotation;
-
-        float dangle = Mathf.Atan(demandGradient) * Mathf.Rad2Deg;
-        Quaternion dtargetRotation = Quaternion.Euler(0, 0, dangle);
-        if (supplyGradient < 0)
+        if (shiftedSupplyContainer)
         {
-            sangle += 180f;
+            Transform supplyLine = shiftedSupplyContainer.transform.Find("Supply Line");
+            supplyLine.transform.rotation = stargetRotation;
+
+            TextMesh label = shiftedSupplyContainer.transform.Find("Supply Label").GetComponent<TextMesh>();
+
+            UpdateLabelPosition(supplyLine.GetComponent<LineRenderer>(), label, 0);
+        }
+        
+
+        float dRadians = Mathf.Atan(demandGradient);
+        float dAngle = dRadians * Mathf.Rad2Deg;
+        Quaternion dtargetRotation = Quaternion.Euler(0, 0, dAngle);
+
+        demandLine.transform.rotation = dtargetRotation;
+        if (shiftedDemandContainer)
+        {
+            Transform demandLine = shiftedDemandContainer.transform.Find("Demand Line");
+            demandLine.transform.rotation = dtargetRotation;
+
+            TextMesh label = shiftedDemandContainer.transform.Find("Demand Label").GetComponent<TextMesh>();
+
+            UpdateLabelPosition(demandLine.GetComponent<LineRenderer>(), label, 0);
         }
 
-        Vector3 dpivot = demandLine.transform.position + new Vector3(horizontalOffset, verticalOffset, 0f);
-
-        demandLine.transform.RotateAround(dpivot, Vector3.forward, dangle - demandLine.transform.rotation.eulerAngles.z);
-        demandLine.transform.rotation = dtargetRotation;
     }
 
     public void UpdateLabelPosition(LineRenderer line, TextMesh label, int position)
@@ -256,7 +242,7 @@ public class Graph : MonoBehaviour
 
         LineRenderer demandLineRenderer = demandCurve.GetComponent<LineRenderer>();
 
-        coroutine = StartCoroutine(ShiftCurve(demandCurve, amount, gridLineContainer));
+        Coroutine coroutine = StartCoroutine(ShiftCurve(demandCurve, amount, gridLineContainer));
 
         //Put this into its own method later on...
         TextMesh[] GridLineLabels = gridLineContainer.transform.GetComponentsInChildren<TextMesh>();
@@ -304,7 +290,7 @@ public class Graph : MonoBehaviour
         LineRenderer[] gridLineList = gridLineContainer.GetComponentsInChildren<LineRenderer>();
         LineRenderer supplyLineRenderer = supplyCurve.GetComponent<LineRenderer>();
 
-        coroutine = StartCoroutine(ShiftCurve(supplyCurve, amount, gridLineContainer));
+        Coroutine coroutine = StartCoroutine(ShiftCurve(supplyCurve, amount, gridLineContainer));
 
         //Put this into its own method later on...
         TextMesh[] GridLineLabels = gridLineContainer.transform.GetComponentsInChildren<TextMesh>();
@@ -361,7 +347,6 @@ public class Graph : MonoBehaviour
 
             yield return new WaitForSeconds(0.01f); // wait for 1 second
         }
-        StopCoroutine(coroutine);
     }
 
     public void MoveGridLine(Transform gridLineContainer, Transform curve)
@@ -418,35 +403,56 @@ public class Graph : MonoBehaviour
         Vector3 line1start = line1.transform.TransformPoint(line1.GetPosition(0));
         Vector3 line1end = line1.transform.TransformPoint(line1.GetPosition(1));
 
+        Vector3 line2start = line2.transform.TransformPoint(line2.GetPosition(0));
+        Vector3 line2end = line2.transform.TransformPoint(line2.GetPosition(1));
 
-        Vector3 p3 = line2.transform.TransformPoint(line2.GetPosition(0));
-        Vector3 p4 = line2.transform.TransformPoint(line2.GetPosition(1));
+        float m1;
+        float m2;
 
-        // Calculate the direction vectors of the two lines
-        Vector3 dir1 = line1end - line1start;
-        Vector3 dir2 = p4 - p3;
-
-        // Calculate the denominator of the equation for t1 and t2
-        float den = (dir1.x * dir2.y) - (dir1.y * dir2.x);
-
-        // If the denominator is zero, the lines are parallel
-        if (Mathf.Approximately(den, 0))
+        if (line1.name.Equals("Supply Line"))
         {
-            return Vector3.zero;
+            m1 = supplyGradient;
+            m2 = demandGradient;
+        }
+        else
+        {
+            m1 = demandGradient;
+            m2 = supplyGradient;
         }
 
-        // Calculate the values of t1 and t2
-        float t1 = ((p3.x - line1start.x) * dir2.y - (p3.y - line1start.y) * dir2.x) / den;
-        float t2 = ((p3.x - line1start.x) * dir1.y - (p3.y - line1start.y) * dir1.x) / den;
+        float c1 = line1start.y - m1 * line1start.x;
 
-        // If either t value is outside of the range [0, 1], there is no gridLine
-        if (t1 < 0 || t1 > 1 || t2 < 0 || t2 > 1)
+
+        float c2 = line2start.y - m2 * line2start.x;
+
+        // y1 = mx1 + c1 
+        // y2 = mx2 + c2
+        // 
+        // mx1 + c1 = mx2 + c2
+        // mx1 - mx2 = c1 - c2
+        // x(m1 - m2) = c1 - c2
+        // x = c1 - c2 / m1 - m2
+        float x = (c2 - c1) / (m1 - m2);
+
+        float y = m1 * x + c1;
+
+        Vector3 result = new Vector3(x, y, 0);
+
+        // If the intersection point is outside of the range of the line segments, there is no gridLine
+        if (x < Mathf.Min(line1start.x, line1end.x)
+           || x > Mathf.Max(line1start.x, line1end.x) 
+           || x < Mathf.Min(line2start.x, line2end.x)
+           || x > Mathf.Max(line2start.x, line2end.x)
+           || y < Mathf.Min(line1start.y, line1end.y)
+           || y > Mathf.Max(line1start.y, line1end.y)
+           || y < Mathf.Min(line2start.y, line2end.y)
+           || y > Mathf.Max(line2start.y, line2end.y))
         {
-            return Vector3.zero;
+            result = new Vector3(-999, -999, -999);
         }
 
-        // Calculate the gridLine point and return it
-        return line1start + dir1 * t1;
+        // Return the intersection point
+        return result;
     }
 }
 
