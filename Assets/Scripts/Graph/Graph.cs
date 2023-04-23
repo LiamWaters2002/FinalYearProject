@@ -13,7 +13,7 @@ public class Graph : MonoBehaviour
     public float supplyGradient = 1f; //Check unity inspector
     public float demandGradient = -1f; //Check unity inspector
 
-    public float curveThickness = 3;
+    private float curveThickness = 5;
 
     public TextMesh quantityLabel;
     public TextMesh priceLabel;
@@ -26,8 +26,8 @@ public class Graph : MonoBehaviour
     public GameObject demandLine;
     public GameObject xAxis;
     public GameObject yAxis;
-    private GameObject supplyLabel;
-    private GameObject demandLabel;
+    private Transform supplyLabel;
+    private Transform demandLabel;
     public LineRenderer[] horizontalGridLine;
     public LineRenderer[] verticalGridLine;
 
@@ -68,8 +68,8 @@ public class Graph : MonoBehaviour
         yAxisLineRenderer.endWidth = curveThickness;
 
 
-        supplyLabel = GameObject.Find("Supply Label");
-        demandLabel = GameObject.Find("Demand Label");
+        supplyLabel = supplyLineContainer.transform.Find("Supply Label");
+        demandLabel = demandLineContainer.transform.Find("Demand Label");
 
         //Only need to get data for one either supply/demand's GridLines as they start off in same position.
         verticalGridLinePositions = new Vector3[verticalGridLine[0].positionCount];
@@ -78,6 +78,17 @@ public class Graph : MonoBehaviour
         horizontalGridLinePositions = new Vector3[horizontalGridLine[0].positionCount];
         horizontalGridLine[0].GetPositions(horizontalGridLinePositions);
 
+        verticalGridLine[0].startWidth = 3;
+        verticalGridLine[0].endWidth = 3;
+
+        horizontalGridLine[0].startWidth = 3;
+        horizontalGridLine[0].endWidth = 3;
+
+        verticalGridLine[1].startWidth = 3;
+        verticalGridLine[1].endWidth = 3;
+
+        horizontalGridLine[1].startWidth = 3;
+        horizontalGridLine[1].endWidth = 3;
     }
 
     public void Update()
@@ -117,6 +128,90 @@ public class Graph : MonoBehaviour
         }
     }
 
+
+    public void ResetGraph()
+    {
+        Destroy(shiftedDemandContainer);
+        Destroy(shiftedSupplyContainer);
+        supplyGradient = 1;
+        demandGradient = -1;
+        supplyShifted = false;
+        demandShifted = false;
+    }
+
+    public void IncreaseSupplyGradient()
+    {
+        float rotation = supplyLine.transform.eulerAngles.z;
+        rotation = rotation + 5;
+        Debug.Log(rotation);
+        if (!(rotation > 89))
+        {
+            supplyGradient = Mathf.Tan(rotation * Mathf.Deg2Rad);
+            UpdateLabelPosition(supplyLine.GetComponent<LineRenderer>(), supplyLabel.GetComponent<TextMesh>(), 0);
+        }
+        else if (rotation > 89)
+        {
+            supplyGradient = Mathf.Tan(89 * Mathf.Deg2Rad); //90 causes label to be in wrong position...
+        }
+        ShiftSupply(shiftedSupplyContainer ,1);
+        ShiftDemand(shiftedDemandContainer, 1);
+    }
+
+    public void DecreaseSupplyGradient()
+    {
+        float rotation = supplyLine.transform.eulerAngles.z;
+        rotation = rotation - 5;
+        Debug.Log(rotation);
+        //it is not exactly 0
+        if (!(rotation < 1))
+        {
+            supplyGradient = Mathf.Tan(rotation * Mathf.Deg2Rad);
+            UpdateLabelPosition(supplyLine.GetComponent<LineRenderer>(), supplyLabel.GetComponent<TextMesh>(), 0);
+        }
+        else if (rotation < 1)
+        {
+            supplyGradient = 0;
+        }
+        ShiftSupply(shiftedSupplyContainer, 1);
+        ShiftDemand(shiftedDemandContainer, 1);
+    }
+
+    public void IncreaseDemandGradient()
+    {
+        float rotation = demandLine.transform.eulerAngles.z;
+        rotation = rotation - 5;
+        Debug.Log(rotation);
+        if (!(rotation < 271 && rotation > 6))
+        {
+            demandGradient = Mathf.Tan(rotation * Mathf.Deg2Rad);
+            UpdateLabelPosition(demandLine.GetComponent<LineRenderer>(), demandLabel.GetComponent<TextMesh>(), 0);
+        }
+        else if (rotation <= 270)
+        {
+            demandGradient = Mathf.Tan(-89 * Mathf.Deg2Rad);
+        }
+
+        MoveGridLine(demandLineContainer.transform.Find("Grid Line Container"), shiftedSupplyContainer.transform.Find("Supply Line"));
+        MoveGridLine(shiftedDemandContainer.transform.Find("Grid Line Container"), shiftedSupplyContainer.transform.Find("Supply Line"));
+    }
+
+    public void DecreaseDemandGradient()
+    {
+        float rotation = demandLine.transform.eulerAngles.z;
+        rotation = rotation + 5;
+        Debug.Log(rotation);
+        if (rotation > 359 || demandGradient == 0)
+        {
+            demandGradient = 0;
+        }
+        else
+        {
+            demandGradient = Mathf.Tan(rotation * Mathf.Deg2Rad);
+            UpdateLabelPosition(demandLine.GetComponent<LineRenderer>(), demandLabel.GetComponent<TextMesh>(), 0);
+        }
+        MoveGridLine(demandLineContainer.transform.Find("Grid Line Container"), shiftedSupplyContainer.transform.Find("Supply Line"));
+        MoveGridLine(shiftedDemandContainer.transform.Find("Grid Line Container"), shiftedSupplyContainer.transform.Find("Supply Line"));
+    }
 
     public void RightwardShiftInSupply()
     {
@@ -370,6 +465,8 @@ public class Graph : MonoBehaviour
 
         foreach (LineRenderer gridLineRenderer in gridLineRendererContainer)
         {
+            gridLineRenderer.startWidth = 3f;
+            gridLineRenderer.endWidth = 3f;
             gridLineRenderer.transform.position = gridLinePoint;
             Vector3 position = new Vector3(0, 0, 0);
             if (gridLineRenderer.name.Equals("Grid Line Horizontal")){

@@ -16,6 +16,9 @@ public class GameTime : MonoBehaviour
     public Image imgPausePlay;
     public Sprite pause;
     public Sprite play;
+    public Text GameMoney;
+
+    public RandomEvents randomEvents;
 
 
 
@@ -25,21 +28,31 @@ public class GameTime : MonoBehaviour
         {
             gameDuration = gameDuration +  Time.deltaTime;
 
-            // Calculate how many months have passed based on the total elapsed time(float to int)
+            if (gameDuration > secondsPerMonth)
+            {
+                string moneyString = GameMoney.text.Replace(",", "");
+                int money = int.Parse(moneyString);
+                money = money + 10000;
+                GameMoney.text = money.ToString("N0");
+            }
+
+            // Calculate months passed based on gameDuration / gameSpeed(seconds per month)
             int monthsPassed = Mathf.FloorToInt(gameDuration / secondsPerMonth);
 
             // Increment the month and year based on the number of months passed
-            currentMonth += monthsPassed;
+            currentMonth = currentMonth + monthsPassed;
             if (currentMonth > 12)
             {
                 currentYear += Mathf.FloorToInt(currentMonth / 12);
                 currentMonth %= 12;
+
+                RandomEvent();
             }
             monthText.text = currentMonth.ToString();
             yearText.text = currentYear.ToString();
 
-            // Subtract the time linked with elapsed months from the total elapsed time
-            gameDuration -= monthsPassed * secondsPerMonth;
+            // Subtract the time linked with elapsed months from the game duration
+            gameDuration = gameDuration - (monthsPassed * secondsPerMonth);
         }
     }
 
@@ -73,5 +86,11 @@ public class GameTime : MonoBehaviour
         {
             imgPausePlay.sprite = pause;
         }
+    }
+
+    public void RandomEvent()
+    {
+        ToggleGameTimePaused(); // Pause timer
+         randomEvents.DisplayRandomEvent();
     }
 }

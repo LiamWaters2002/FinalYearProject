@@ -1,26 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
-    // Update is called once per frame
+    public PlayerInput playerInput;
+    private InputAction leftStickMovement;
+
+    private void Awake()
+    {
+
+    }
+
     void Update()
     {
         Vector3 inputMoveDirection = new Vector3(0, 0, 0);
-        if (Input.GetKey(KeyCode.W))
+        Vector2 movement = playerInput.actions["Move"].ReadValue<Vector2>();
+        Vector2 rotationOrHeight = playerInput.actions["Rotate"].ReadValue<Vector2>(); ;
+
+
+        if (Input.GetKey(KeyCode.W) || movement.y > 0f)
         {
             inputMoveDirection.z = +1f;
         }
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.S) || movement.y < 0f)
         {
             inputMoveDirection.z = -1f;
         }
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.A) || movement.x < 0f)
         {
             inputMoveDirection.x = -1f;
         }
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.D) || movement.x > 0f)
         {
             inputMoveDirection.x = +1f;
         }
@@ -33,12 +45,12 @@ public class CameraController : MonoBehaviour
 
         float yChange = 10f; // adjust the amount of change as you like
 
-        if (Input.GetKey(KeyCode.E)) // e button
+        if (Input.GetKey(KeyCode.E) || rotationOrHeight.y > 0f) // e button
         {
             transform.position += Vector3.up * yChange * Time.deltaTime; // increase the y level of this object smoothly using deltatime
         }
 
-        if (Input.GetKey(KeyCode.Q)) // q button
+        if (Input.GetKey(KeyCode.Q) || rotationOrHeight.y < 0f) // q button
         {
             transform.position -= Vector3.up * yChange * Time.deltaTime; // decrease the y level of this object smoothly using deltatime
         }
@@ -46,22 +58,22 @@ public class CameraController : MonoBehaviour
 
         Vector3 rotationVector = new Vector3(0, 0, 0);
 
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.LeftArrow) || rotationOrHeight.x > 0f)
         {
             rotationVector.y = +1f;
         }
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.RightArrow) || rotationOrHeight.x < 0f)
         {
             rotationVector.y = -1f;
         }
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            rotationVector.x = +1f;
-        }
-        if (Input.GetKey(KeyCode.DownArrow))
-        {
-            rotationVector.x = -1f;
-        }
+        //if (Input.GetKey(KeyCode.UpArrow))
+        //{
+        //    rotationVector.x = +1f;
+        //}
+        //if (Input.GetKey(KeyCode.DownArrow))
+        //{
+        //    rotationVector.x = -1f;
+        //}
 
         float rotationSpeed = 100f;
 

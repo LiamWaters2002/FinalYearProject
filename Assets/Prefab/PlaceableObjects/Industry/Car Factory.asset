@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: Car Factory
   m_EditorClassIdentifier: 
   prefab: {fileID: 5034855539563185112, guid: 0b8530b36362b914392593059139d6d8, type: 3}
+  renderTextureMaterial: {fileID: 0}
   buttonImage: {fileID: 0}
   name: Car Factory
   description: Creates cars, using steel
   price: 2000000
   xWidth: 30
   zDepth: 19
+  isMarket: 1

@@ -1,0 +1,54 @@
+{
+    "name": "InputActionAsset",
+    "maps": [
+        {
+            "name": "Camera",
+            "id": "4d4adb4b-8550-49f3-bc3d-8382567ce365",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Value",
+                    "id": "841c1268-4a7f-41b5-b92a-4f6400fc06f8",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Rotate",
+                    "type": "Value",
+                    "id": "96adb357-7545-4232-bd65-a46cd1d3ff81",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "6436216c-d648-45a0-b736-1aad6f19367c",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "79e1344b-e0aa-4644-b180-ab9b53db5f4f",
+                    "path": "<Gamepad>/dpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

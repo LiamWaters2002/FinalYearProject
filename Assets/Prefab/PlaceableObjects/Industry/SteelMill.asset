@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: SteelMill
   m_EditorClassIdentifier: 
   prefab: {fileID: 5034855539563185112, guid: 3ffa8e90e860ef544a1b73edad81bb1a, type: 3}
+  renderTextureMaterial: {fileID: 0}
   buttonImage: {fileID: 0}
   name: Steel Mill
   description: Converts iron to steel
   price: 2000000
   xWidth: 10
   zDepth: 8
+  isMarket: 1

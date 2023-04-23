@@ -7,12 +7,14 @@ public class PlaceableObject : ScriptableObject //ScriptableObject - Defining ty
 {
 
     [SerializeField] private GameObject prefab;
+    [SerializeField] private GameObject renderTextureMaterial;
     [SerializeField] private Transform buttonImage; //Do later...
     [SerializeField] private string name;
     [SerializeField] private string description;
     [SerializeField] private int price;
     [SerializeField] private int xWidth;
     [SerializeField] private int zDepth;
+    [SerializeField] bool isMarket;
     private Object ingameObject;
     public List<GridPosition> worldPositionList;
 
@@ -49,6 +51,11 @@ public class PlaceableObject : ScriptableObject //ScriptableObject - Defining ty
         return 0;
     }
 
+    public bool hasMarket()
+    {
+        return isMarket;
+    }
+
     public string GetName()
     {
         return name;
@@ -77,5 +84,10 @@ public class PlaceableObject : ScriptableObject //ScriptableObject - Defining ty
     public GameObject GetPrefab()
     {
         return prefab;
+    }
+
+    public GameObject GetRenderTextureMaterial()
+    {
+        return renderTextureMaterial;
     }
 }

@@ -6,6 +6,6 @@ public class GameSetup : MonoBehaviour
 {
     void Awake()
     {
-        Screen.SetResolution(1280, 720, true);
+        Screen.SetResolution(1920, 1080, true);
     }
 }

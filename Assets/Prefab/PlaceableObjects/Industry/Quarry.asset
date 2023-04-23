@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: Quarry
   m_EditorClassIdentifier: 
   prefab: {fileID: 5034855539563185112, guid: a772cb756bc826246873ff4009fb5cf2, type: 3}
+  renderTextureMaterial: {fileID: 0}
   buttonImage: {fileID: 0}
   name: Quarry
   description: Used to obtain iron
   price: 2000000
   xWidth: 19
   zDepth: 19
+  isMarket: 1
