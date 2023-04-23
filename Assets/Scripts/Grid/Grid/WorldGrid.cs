@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -12,12 +13,16 @@ public class WorldGrid : MonoBehaviour
     private Direction direction;
     public Canvas placeMenu;
     public Text governmentMoney;
+    public GameObject BuildingContainer;
+    public GameObject PlaceableContainer;
 
     private Grid grid;
     private GridObject gridObject;
     int gridWidth = 100;
     int gridHeight = 100;
     float cellSize = 2f;
+
+    public GameObject ingameGraphPrefab;
 
     private void Awake()
     {
@@ -35,15 +40,15 @@ public class WorldGrid : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) || Input.touchCount > 0)
         {
             //Prevent clicking grid when a canvas is being dispalyed.
             if (EventSystem.current.IsPointerOverGameObject() || EventSystem.current.IsPointerOverGameObject(0) || Input.touchCount > 0 && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
             {
                 return;
             }
-
             GridPosition gridPosition = grid.GetGridPosition(PressedPosition.getClickPosition());
+
 
             int pressedPositionX = gridPosition.getX();
             int pressedPositionZ = gridPosition.getZ();
@@ -68,9 +73,21 @@ public class WorldGrid : MonoBehaviour
                         Vector3 offset = direction.getOffset(placeableObject, cellSize);
 
                         Debug.Log(offset.ToString());
-                        Object ingameObject = Instantiate(placeableObject.GetPrefab(), position + offset, Quaternion.Euler(0, placeableObject.GetDirection(objectDirection), 0));
-
+                        GameObject ingameObject = Instantiate(placeableObject.GetPrefab(), position + offset, Quaternion.Euler(0, placeableObject.GetDirection(objectDirection), 0));
                         AddObjectAtGridPosition(placeableObject, gridPosition, objectDirection);
+                        //Add market grid to game
+                        if (placeableObject.hasMarket())
+                        {
+                            GameObject ingameGraph = Instantiate(ingameGraphPrefab, ingameObject.transform.Find("Plane").transform.position, Quaternion.Euler(0, placeableObject.GetDirection(objectDirection), 0));
+                            ingameGraph.transform.parent = ingameObject.transform;
+                            ingameObject.transform.parent = BuildingContainer.transform;
+                        }
+                        else
+                        {
+                            ingameObject.transform.parent = PlaceableContainer.transform;
+                        }
+
+
                     }
                 }
                 else
