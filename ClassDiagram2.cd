@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CameraController">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Scripts\Camera\CameraController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FaceCamera">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Scripts\Camera\FaceCamera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EconomicAgent">
+    <Position X="4" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAgAAAAA=</HashCode>
+      <FileName>Scripts\Gameplay\Economic Markets\Agents\EconomicAgent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Good">
+    <Position X="4" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAIAAQAAAAAAAAAAAAAIAAABAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>Scripts\Gameplay\Economic Markets\Good.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Market">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIIgGBIAAAEBAABAAACAAQGARAACAAAAACAAIFAAA=</HashCode>
+      <FileName>Scripts\Gameplay\Economic Markets\Market.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="graph" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="GameSetup">
+    <Position X="0.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Scripts\Gameplay\GameSetup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameTime">
+    <Position X="0.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQQAQAAAAAAAAAAAAAIAAAAMAACkgAAAAAAAAAAAIBA=</HashCode>
+      <FileName>Scripts\Gameplay\GameTime.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Graph">
+    <Position X="6.5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>gAQVEIBLASIAaYDAIAAAGgCEQMAADoCAAEhAAYAAKAA=</HashCode>
+      <FileName>Scripts\Graph\Graph.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Grid">
+    <Position X="23" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAEAAAAAAAAACIAAAgAAQAAAAgAAQoAAAAAAAAAAAAA=</HashCode>
+      <FileName>Scripts\Grid\Grid\Grid.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="gridObject" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="GridCell">
+    <Position X="23" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Scripts\Grid\Grid\GridCell.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GridDisplay">
+    <Position X="23" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAACAAAAAAAAAAAAAAAAAAIAAAAABAAAAAAAA=</HashCode>
+      <FileName>Scripts\Grid\Grid\GridDisplay.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GridPosition">
+    <Position X="11.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAABAAUABAAA=</HashCode>
+      <FileName>Scripts\Grid\Grid\GridPosistion.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PressedPosition">
+    <Position X="10" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAUACAAAAAAAEAAAAAAABAAAAAAAEAABQAAAAAAAAEA=</HashCode>
+      <FileName>Scripts\Grid\Grid\PressedPosition.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WorldGrid">
+    <Position X="20.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAUAEAAAAAIAIAAAAgAAQgBATgBIAgAASEAAAEAACUA=</HashCode>
+      <FileName>Scripts\Grid\Grid\WorldGrid.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="grid" />
+      <Field Name="placeableObject" />
+      <Field Name="direction" />
+      <Field Name="gridObject" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Direction">
+    <Position X="20.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACACAAAAAAAAAggAAAAAAAAAAQAAAAQAAAEA=</HashCode>
+      <FileName>Scripts\Grid\GridObjects\Direction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GridObject">
+    <Position X="25.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAIAAAAAAAAAAABAAAAAAIAIAAAAAAAAA=</HashCode>
+      <FileName>Scripts\Grid\GridObjects\GridObject.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="gridObjectArray" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PlaceableObject">
+    <Position X="17" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAEBAAAgAAAIAAABMACAAAIAIAAEAJAAAAABAAAEBAE=</HashCode>
+      <FileName>Scripts\Grid\GridObjects\PlaceableObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PlacingMenu">
+    <Position X="14.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAiAA=</HashCode>
+      <FileName>Scripts\UI\ActionBar\Building\Placing\PlacingMenu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BuildingMenu">
+    <Position X="9.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQBAAAAACAAAAAgAEQABQAAAAAAAAIAiAAAACQAAAA=</HashCode>
+      <FileName>Scripts\UI\ActionBar\Building\BuildingMenu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LearnMenu">
+    <Position X="13" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAACAAAAAgAEAABQAAAAAAAAIAgAAAACQAAAA=</HashCode>
+      <FileName>Scripts\UI\ActionBar\Learning\LearnMenu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CanvasController">
+    <Position X="11.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>wAAAAAAAASIQCAAAAAAgAAEEAQKAgABBAAAAAAQAAAI=</HashCode>
+      <FileName>Scripts\UI\ActionBar\CanvasController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GeneratePreview">
+    <Position X="13.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAgAAAAAAEIAAABBAAAAQEQAAAAAAEA=</HashCode>
+      <FileName>Scripts\UI\GeneratePreview\GeneratePreview.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LearnContents">
+    <Position X="14.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAgAAAAAA=</HashCode>
+      <FileName>Scripts\UI\Learn Contents Page\LearnContents.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
