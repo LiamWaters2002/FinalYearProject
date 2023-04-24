@@ -13,6 +13,8 @@ public class CanvasController : MonoBehaviour
     public Canvas MarketsCanvas;
     public Canvas ShiftCurvesCanvas;
     public Canvas ElasticityCanvas;
+    public Canvas FullyInteractiveCanvas;
+    public GameObject RandomEventsContainer;
 
     public void Start()
     {
@@ -53,6 +55,11 @@ public class CanvasController : MonoBehaviour
         CloseAllBut(ShiftCurvesCanvas);
     }
 
+    public void OnFullyInteractiveClick()
+    {
+        CloseAllBut(FullyInteractiveCanvas);
+    }
+
     public void CloseAll()
     {
         CloseAllBut(null);
@@ -67,6 +74,13 @@ public class CanvasController : MonoBehaviour
         PolicyCanvas.enabled = false;
         ShiftCurvesCanvas.enabled = false;
         ElasticityCanvas.enabled = false;
+        FullyInteractiveCanvas.enabled = false;
+        
+
+        foreach (Transform canvas in RandomEventsContainer.transform)
+        {
+            canvas.gameObject.SetActive(false);
+        }
 
         if (canvasToOpen == null)
         {
@@ -99,6 +113,10 @@ public class CanvasController : MonoBehaviour
         else if (canvasToOpen.Equals(ElasticityCanvas))
         {
             ElasticityCanvas.enabled = true;
+        }
+        else if (canvasToOpen.Equals(FullyInteractiveCanvas))
+        {
+            FullyInteractiveCanvas.enabled = true;
         }
     }
 

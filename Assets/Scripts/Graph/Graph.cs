@@ -42,6 +42,9 @@ public class Graph : MonoBehaviour
 
     public string shiftType = "";
 
+    public int shiftAmount = 10;
+    public int rotateAmount = 10;
+
     public GameObject graphContainer;
 
     void Start()
@@ -108,23 +111,23 @@ public class Graph : MonoBehaviour
         if (shiftType.Equals("RightwardShiftInSupply"))
         {
             shiftType = "";
-            ShiftSupply(shiftedSupplyContainer, 10); //negative - left, positive - right
+            ShiftSupply(shiftedSupplyContainer, shiftAmount); //negative - left, positive - right
             
         }
         else if (shiftType.Equals("RightwardShiftInDemand"))
         {
             shiftType = "";
-            ShiftDemand(shiftedDemandContainer, 10); //negative - left, positive - right
+            ShiftDemand(shiftedDemandContainer, shiftAmount); //negative - left, positive - right
         }
         else if (shiftType.Equals("LeftwardShiftInSupply"))
         {
             shiftType = "";
-            ShiftSupply(shiftedSupplyContainer, -10); //negative - left, positive - right
+            ShiftSupply(shiftedSupplyContainer, -shiftAmount); //negative - left, positive - right
         }
         else if (shiftType.Equals("LeftwardShiftInDemand"))
         {
             shiftType = "";
-            ShiftDemand(shiftedDemandContainer, -10); //negative - left, positive - right
+            ShiftDemand(shiftedDemandContainer, -shiftAmount); //negative - left, positive - right
         }
     }
 
@@ -134,15 +137,44 @@ public class Graph : MonoBehaviour
         Destroy(shiftedDemandContainer);
         Destroy(shiftedSupplyContainer);
         supplyGradient = 1;
+        supplyLine.transform.eulerAngles = new Vector3(0, 0, 45);
         demandGradient = -1;
+        demandLine.transform.eulerAngles = new Vector3(0, 0, -45);
         supplyShifted = false;
         demandShifted = false;
+    }
+
+    public void LearnElasticity()
+    {
+        ResetGraph();
+        shiftAmount = 50;
+        rotateAmount = 30;
+        for (int x = 0; x < 200; x++)
+        {
+            DecreaseSupplyGradient();
+        }
+
+        RightwardShiftInDemand();
+    }
+
+    public void LearnInelasticity()
+    {
+        ResetGraph();
+        shiftAmount = 50;
+        rotateAmount = 30;
+        for (int x = 0; x < 200; x++)
+        {
+            Debug.Log("here");
+            IncreaseSupplyGradient();
+        }
+
+        RightwardShiftInDemand();
     }
 
     public void IncreaseSupplyGradient()
     {
         float rotation = supplyLine.transform.eulerAngles.z;
-        rotation = rotation + 5;
+        rotation = rotation + rotateAmount;
         Debug.Log(rotation);
         if (!(rotation > 89))
         {
@@ -153,14 +185,12 @@ public class Graph : MonoBehaviour
         {
             supplyGradient = Mathf.Tan(89 * Mathf.Deg2Rad); //90 causes label to be in wrong position...
         }
-        ShiftSupply(shiftedSupplyContainer ,1);
-        ShiftDemand(shiftedDemandContainer, 1);
     }
 
     public void DecreaseSupplyGradient()
     {
         float rotation = supplyLine.transform.eulerAngles.z;
-        rotation = rotation - 5;
+        rotation = rotation - rotateAmount;
         Debug.Log(rotation);
         //it is not exactly 0
         if (!(rotation < 1))
@@ -172,14 +202,12 @@ public class Graph : MonoBehaviour
         {
             supplyGradient = 0;
         }
-        ShiftSupply(shiftedSupplyContainer, 1);
-        ShiftDemand(shiftedDemandContainer, 1);
     }
 
     public void IncreaseDemandGradient()
     {
         float rotation = demandLine.transform.eulerAngles.z;
-        rotation = rotation - 5;
+        rotation = rotation - rotateAmount;
         Debug.Log(rotation);
         if (!(rotation < 271 && rotation > 6))
         {
@@ -190,15 +218,12 @@ public class Graph : MonoBehaviour
         {
             demandGradient = Mathf.Tan(-89 * Mathf.Deg2Rad);
         }
-
-        MoveGridLine(demandLineContainer.transform.Find("Grid Line Container"), shiftedSupplyContainer.transform.Find("Supply Line"));
-        MoveGridLine(shiftedDemandContainer.transform.Find("Grid Line Container"), shiftedSupplyContainer.transform.Find("Supply Line"));
     }
 
     public void DecreaseDemandGradient()
     {
         float rotation = demandLine.transform.eulerAngles.z;
-        rotation = rotation + 5;
+        rotation = rotation + rotateAmount;
         Debug.Log(rotation);
         if (rotation > 359 || demandGradient == 0)
         {
@@ -209,8 +234,6 @@ public class Graph : MonoBehaviour
             demandGradient = Mathf.Tan(rotation * Mathf.Deg2Rad);
             UpdateLabelPosition(demandLine.GetComponent<LineRenderer>(), demandLabel.GetComponent<TextMesh>(), 0);
         }
-        MoveGridLine(demandLineContainer.transform.Find("Grid Line Container"), shiftedSupplyContainer.transform.Find("Supply Line"));
-        MoveGridLine(shiftedDemandContainer.transform.Find("Grid Line Container"), shiftedSupplyContainer.transform.Find("Supply Line"));
     }
 
     public void RightwardShiftInSupply()
@@ -307,7 +330,7 @@ public class Graph : MonoBehaviour
     }
 
     /// <summary>
-    /// Shifts a particular curve, and its labels
+    /// Shifts the demand curve, and its labels
     /// </summary>
     /// <param name="demandLineContainer"></param>
     /// <param name="amount"></param>
