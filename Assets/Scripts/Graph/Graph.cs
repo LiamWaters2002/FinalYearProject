@@ -144,7 +144,7 @@ public class Graph : MonoBehaviour
         demandShifted = false;
     }
 
-    public void LearnElasticity()
+    public void LearnSupplyElasticity()
     {
         ResetGraph();
         shiftAmount = 50;
@@ -157,7 +157,7 @@ public class Graph : MonoBehaviour
         RightwardShiftInDemand();
     }
 
-    public void LearnInelasticity()
+    public void LearnSupplyInelasticity()
     {
         ResetGraph();
         shiftAmount = 50;
@@ -169,6 +169,33 @@ public class Graph : MonoBehaviour
         }
 
         RightwardShiftInDemand();
+    }
+
+    public void LearnDemandElasticity()
+    {
+        ResetGraph();
+        shiftAmount = 50;
+        rotateAmount = 30;
+        for (int x = 0; x < 200; x++)
+        {
+            DecreaseDemandGradient();
+        }
+
+        RightwardShiftInSupply();
+    }
+
+    public void LearnDemandInelasticity()
+    {
+        ResetGraph();
+        shiftAmount = 50;
+        rotateAmount = 30;
+        for (int x = 0; x < 200; x++)
+        {
+            Debug.Log("here");
+            IncreaseDemandGradient();
+        }
+
+        RightwardShiftInSupply();
     }
 
     public void IncreaseSupplyGradient()
