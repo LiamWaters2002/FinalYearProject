@@ -8,6 +8,8 @@ public class WorldGrid : MonoBehaviour
 {
     public static WorldGrid Instance { get; private set; }
 
+    public DetermineOutcome determineOutcome;
+
     public List<PlaceableObject> placeableObjectList;
     private PlaceableObject placeableObject;
     private Direction direction;
