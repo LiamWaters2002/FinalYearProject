@@ -77,9 +77,13 @@ public class CanvasController : MonoBehaviour
         FullyInteractiveCanvas.enabled = false;
         
 
-        foreach (Transform canvas in RandomEventsContainer.transform)
+        foreach (Transform randomEventTypeContainer in RandomEventsContainer.transform)
         {
-            canvas.gameObject.SetActive(false);
+            foreach(Transform canvas in randomEventTypeContainer)
+            {
+                canvas.gameObject.GetComponent<Canvas>().enabled = false;
+            }
+            
         }
 
         if (canvasToOpen == null)

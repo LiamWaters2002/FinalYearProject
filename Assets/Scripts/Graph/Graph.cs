@@ -144,59 +144,22 @@ public class Graph : MonoBehaviour
         demandShifted = false;
     }
 
-    public void LearnSupplyElasticity()
+    public void ResetDemand()
     {
-        ResetGraph();
-        shiftAmount = 50;
-        rotateAmount = 30;
-        for (int x = 0; x < 200; x++)
-        {
-            DecreaseSupplyGradient();
-        }
-
-        RightwardShiftInDemand();
+        Destroy(shiftedDemandContainer);
+        demandGradient = -1;
+        demandLine.transform.eulerAngles = new Vector3(0, 0, -45);
+        demandShifted = false;
     }
 
-    public void LearnSupplyInelasticity()
+    public void ResetSupply()
     {
-        ResetGraph();
-        shiftAmount = 50;
-        rotateAmount = 30;
-        for (int x = 0; x < 200; x++)
-        {
-            Debug.Log("here");
-            IncreaseSupplyGradient();
-        }
-
-        RightwardShiftInDemand();
+        Destroy(shiftedSupplyContainer);
+        supplyGradient = 1;
+        supplyLine.transform.eulerAngles = new Vector3(0, 0, 45);
+        supplyShifted = false;
     }
 
-    public void LearnDemandElasticity()
-    {
-        ResetGraph();
-        shiftAmount = 50;
-        rotateAmount = 30;
-        for (int x = 0; x < 200; x++)
-        {
-            DecreaseDemandGradient();
-        }
-
-        RightwardShiftInSupply();
-    }
-
-    public void LearnDemandInelasticity()
-    {
-        ResetGraph();
-        shiftAmount = 50;
-        rotateAmount = 30;
-        for (int x = 0; x < 200; x++)
-        {
-            Debug.Log("here");
-            IncreaseDemandGradient();
-        }
-
-        RightwardShiftInSupply();
-    }
 
     public void IncreaseSupplyGradient()
     {
@@ -600,6 +563,89 @@ public class Graph : MonoBehaviour
 
         // Return the intersection point
         return result;
+    }
+
+    public void LearnSupplyElasticity()
+    {
+        ResetGraph();
+        shiftAmount = 50;
+        rotateAmount = 30;
+        for (int x = 0; x < 200; x++)
+        {
+            DecreaseSupplyGradient();
+        }
+
+        RightwardShiftInDemand();
+    }
+
+    public void LearnSupplyInelasticity()
+    {
+        ResetGraph();
+        shiftAmount = 50;
+        rotateAmount = 30;
+        for (int x = 0; x < 200; x++)
+        {
+            Debug.Log("here");
+            IncreaseSupplyGradient();
+        }
+
+        RightwardShiftInDemand();
+    }
+
+    public void LearnDemandElasticity()
+    {
+        ResetGraph();
+        shiftAmount = 50;
+        rotateAmount = 30;
+        for (int x = 0; x < 200; x++)
+        {
+            DecreaseDemandGradient();
+        }
+
+        RightwardShiftInSupply();
+    }
+
+    public void LearnDemandInelasticity()
+    {
+        ResetGraph();
+        shiftAmount = 50;
+        rotateAmount = 30;
+        for (int x = 0; x < 200; x++)
+        {
+            Debug.Log("here");
+            IncreaseDemandGradient();
+        }
+
+        RightwardShiftInSupply();
+    }
+
+    public void LearnRightDemandShift()
+    {
+        ResetGraph();
+        shiftAmount = 50;
+        RightwardShiftInDemand();
+    }
+
+    public void LearnLeftDemandShift()
+    {
+        ResetGraph();
+        shiftAmount = 50;
+        LeftwardShiftInDemand();
+    }
+
+    public void LearnRightSupplyShift()
+    {
+        ResetGraph();
+        shiftAmount = 50;
+        RightwardShiftInSupply();
+    }
+
+
+    public void LearnLeftSupplyShift()
+    {
+        ResetGraph();
+        shiftAmount = 50;
+        LeftwardShiftInSupply();
     }
 }
 

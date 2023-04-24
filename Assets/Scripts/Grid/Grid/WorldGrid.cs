@@ -81,6 +81,26 @@ public class WorldGrid : MonoBehaviour
                         if (placeableObject.hasMarket())
                         {
                             GameObject ingameGraph = Instantiate(ingameGraphPrefab, ingameObject.transform.Find("Plane").transform.position, Quaternion.Euler(0, placeableObject.GetDirection(objectDirection), 0));
+                            Transform ingameGraphChild = ingameGraph.transform.GetChild(0);
+                            if (placeableObject.GetName().Equals("Car Factory"))
+                            {
+                                ingameGraphChild.GetComponent<Renderer>().material = Resources.Load<Material>("Materials/Graph Material/CarMarket");
+                            }
+                            else if (placeableObject.GetName().Equals("Steel Mill"))
+                            {
+                                ingameGraphChild.GetComponent<Renderer>().material = Resources.Load<Material>("Materials/Graph Material/SteelMarket");
+                            }
+                            else if (placeableObject.GetName().Equals("Farm"))
+                            {
+                                ingameGraphChild.GetComponent<Renderer>().material = Resources.Load<Material>("Materials/Graph Material/WheatMarket");
+                            }
+                            else if (placeableObject.GetName().Equals("Quarry"))
+                            {
+                                ingameGraphChild.GetComponent<Renderer>().material = Resources.Load<Material>("Materials/Graph Material/QuarryMarket");
+                            }
+
+
+
                             ingameGraph.transform.parent = ingameObject.transform;
                             ingameObject.transform.parent = BuildingContainer.transform;
                         }
