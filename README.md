@@ -1,12 +1,5 @@
 # The Economy Builder
 
-<div style="display: flex; align-items: center;">
-  <img src="images/economyBuilder.PNG" alt="Project Image 1" width="100">
-  <a href="https://liamwaters2002.itch.io/economy-builder-build-your-knowledge-of-economics" style="margin-left: 10px;">
-    <img src="https://img.icons8.com/fluent/48/000000/play.png" alt="Play Demo" width="48">
-  </a>
-</div>
-
 ## README for GitHub and Portfolio Page
 Edited: 1st August 2023
 
@@ -43,9 +36,12 @@ This ambitious project has future plans to expand its breadth and depth, includi
 
 ## Live Demo
 
-Click the button below to try the live demo:
-
-[**Try Live Demo**](https://liamwaters2002.itch.io/economy-builder-build-your-knowledge-of-economics)
+<div style="display: flex; align-items: center;">
+    <img src="https://img.icons8.com/fluent/48/000000/play.png" alt="Play Demo" width="48">
+    <a href="https://liamwaters2002.itch.io/economy-builder-build-your-knowledge-of-economics" style="margin-left: 10px;">
+      Try the live demo
+  </a>
+</div>
 
 ## GitHub Repository
 
