@@ -42,4 +42,4 @@ This ambitious project has future plans to expand its breadth and depth, includi
 
 ## GitHub Repository
 
-[![GitHub Repo](https://img.icons8.com/material-outlined/48/000000/github.png)](https://github.com/LiamWaters2002/FinalYearProject)
+[![GitHub Repo](https://img.icons8.com/color/48/000000/github.png)](https://github.com/LiamWaters2002/FinalYearProject)
