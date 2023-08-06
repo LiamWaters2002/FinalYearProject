@@ -36,18 +36,10 @@ This ambitious project has future plans to expand its breadth and depth, includi
 
 ## Live Demo
 
-<div style="display: flex; align-items: center;">
-    <img src="https://img.icons8.com/fluent/48/000000/play.png" alt="Play Demo" width="48">
-    <a href="https://liamwaters2002.itch.io/economy-builder-build-your-knowledge-of-economics" style="margin-left: 10px;">
-      Try the live demo
-  </a>
-</div>
+[![Play Demo](https://img.icons8.com/fluent/48/000000/play.png)](https://liamwaters2002.itch.io/economy-builder-build-your-knowledge-of-economics)
+[**Try the live demo**](https://liamwaters2002.itch.io/economy-builder-build-your-knowledge-of-economics)
 
 ## GitHub Repository
 
-<div style="display: flex; align-items: center;">
-  <img src="https://img.icons8.com/color/48/000000/github.png" alt="GitHub Repo" width="48">
-  <a href="https://github.com/LiamWaters2002/FinalYearProject" style="margin-left: 10px;">
-    View the GitHub repository
-  </a>
-</div>
+[![GitHub Repo](https://img.icons8.com/color/48/000000/github.png)](https://github.com/LiamWaters2002/FinalYearProject)
+[**View the GitHub repository**](https://github.com/LiamWaters2002/FinalYearProject)
