@@ -40,6 +40,14 @@ This ambitious project has future plans to expand its breadth and depth, includi
 
 [![Play Demo](https://img.icons8.com/fluent/48/000000/play.png)](https://liamwaters2002.itch.io/economy-builder-build-your-knowledge-of-economics)
 
+Click the button below to try the live demo:
+
+[**Try Live Demo**](https://liamwaters2002.itch.io/economy-builder-build-your-knowledge-of-economics)
+
 ## GitHub Repository
 
 [![GitHub Repo](https://img.icons8.com/color/48/000000/github.png)](https://github.com/LiamWaters2002/FinalYearProject)
+
+Click the button below to view the GitHub repository:
+
+[**View GitHub Repository**](https://github.com/LiamWaters2002/FinalYearProject)
