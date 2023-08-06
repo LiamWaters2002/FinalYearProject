@@ -1,4 +1,4 @@
-<body>
+
   <div class="project-container">
 
     <h1 class="project-title">The Economy Builder</h1>
@@ -114,4 +114,4 @@
   </div>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="js\swiperImages.js"></script>
-</body>
+
